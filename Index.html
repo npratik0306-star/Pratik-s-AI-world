@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude vs ChatGPT — The AI Adventure Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #7C3AED;
+    --purple-light: #EDE9FE;
+    --purple-mid: #A78BFA;
+    --teal: #0D9488;
+    --teal-light: #CCFBF1;
+    --orange: #EA580C;
+    --orange-light: #FFF7ED;
+    --pink: #DB2777;
+    --pink-light: #FCE7F3;
+    --yellow: #D97706;
+    --yellow-light: #FFFBEB;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --bg: #F8F7FF;
+    --card: #FFFFFF;
+    --text: #1E1B4B;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --radius: 20px;
+    --shadow: 0 4px 24px rgba(124,58,237,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(248,247,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1.5px solid #EDE9FE;
+    padding: 0 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    height: 60px;
+  }
+  .nav-logo {
+    font-size: 18px; font-weight: 900;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-right: auto;
+  }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-links a {
+    font-size: 13px; font-weight: 700;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px; border-radius: 50px;
+    transition: all 0.2s;
+  }
+  .nav-links a:hover { background: var(--purple-light); color: var(--purple); }
+  .nav-links a.active { background: var(--purple); color: #fff; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, #EDE9FE 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--purple-light); color: var(--purple);
+    font-size: 13px; font-weight: 800;
+    padding: 6px 18px; border-radius: 50px;
+    margin-bottom: 1.5rem;
+    border: 1.5px solid #DDD6FE;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .hero h1 .gpt { color: var(--teal); }
+  .hero h1 .claude { color: var(--purple); }
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--muted);
+    font-weight: 600;
+    max-width: 540px; margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--purple); color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800;
+    padding: 14px 32px; border-radius: 50px;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(124,58,237,0.45); }
+  .btn-secondary {
+    background: #fff; color: var(--purple);
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800;
+    padding: 14px 32px; border-radius: 50px;
+    border: 2px solid var(--purple); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--purple-light); }
+
+  /* ── MASCOTS ── */
+  .mascots {
+    display: flex; justify-content: center; gap: 4rem; margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+  .mascot { text-align: center; animation: float 3s ease-in-out infinite; }
+  .mascot:nth-child(2) { animation-delay: 1.5s; }
+  .mascot-face {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px; margin: 0 auto 0.75rem;
+    border: 4px solid transparent;
+    position: relative;
+  }
+  .mascot-face.gpt-face { background: var(--teal-light); border-color: var(--teal); }
+  .mascot-face.claude-face { background: var(--purple-light); border-color: var(--purple); }
+  .mascot-name { font-size: 16px; font-weight: 900; }
+  .mascot-name.gpt-name { color: var(--teal); }
+  .mascot-name.claude-name { color: var(--purple); }
+  .mascot-tagline { font-size: 12px; color: var(--muted); font-weight: 600; max-width: 120px; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-title {
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 900; text-align: center;
+    margin-bottom: 0.75rem;
+  }
+  .section-sub {
+    text-align: center; color: var(--muted);
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 3rem; line-height: 1.6;
+  }
+
+  /* ── CHAPTER PILLS ── */
+  .chapter-nav {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center; margin-bottom: 3rem;
+  }
+  .chapter-pill {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 800;
+    padding: 8px 20px; border-radius: 50px;
+    border: 2px solid var(--border);
+    background: #fff; color: var(--muted);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .chapter-pill:hover { border-color: var(--purple); color: var(--purple); }
+  .chapter-pill.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+  /* ── CARDS ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    border: 2px solid var(--border);
+    transition: all 0.25s;
+    cursor: default;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--purple-mid); }
+  .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .card-title { font-size: 18px; font-weight: 800; margin-bottom: 0.5rem; }
+  .card-body { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.65; }
+
+  /* ── COMPARE BATTLE ── */
+  .battle-arena {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    overflow: hidden;
+  }
+  .battle-header {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    background: linear-gradient(135deg, var(--teal-light), var(--purple-light));
+    padding: 1.5rem 2rem;
+    align-items: center; gap: 1rem;
+  }
+  .battle-side { text-align: center; }
+  .battle-side .logo-big { font-size: 2.5rem; margin-bottom: 0.25rem; }
+  .battle-side .name-big { font-size: 20px; font-weight: 900; }
+  .battle-side.teal-side .name-big { color: var(--teal); }
+  .battle-side.purple-side .name-big { color: var(--purple); }
+  .vs-badge {
+    background: var(--text); color: #fff;
+    font-size: 20px; font-weight: 900;
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .battle-rows { padding: 0 2rem; }
+  .battle-row {
+    display: grid; grid-template-columns: 1fr auto 1fr;
+    gap: 1rem; align-items: center;
+    padding: 1.1rem 0;
+    border-bottom: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: 8px;
+  }
+  .battle-row:last-child { border-bottom: none; }
+  .battle-row:hover { background: var(--purple-light); }
+  .battle-cell { font-size: 14px; font-weight: 700; padding: 4px 8px; border-radius: 10px; }
+  .battle-cell.left { text-align: right; color: var(--teal); background: var(--teal-light); }
+  .battle-cell.right { text-align: left; color: var(--purple); background: var(--purple-light); }
+  .battle-label { font-size: 11px; font-weight: 800; color: var(--muted); text-align: center; text-transform: uppercase; letter-spacing: 0.07em; }
+  .battle-tooltip {
+    display: none; grid-column: 1/-1;
+    background: var(--text); color: #fff;
+    font-size: 13px; font-weight: 600;
+    padding: 10px 14px; border-radius: 12px;
+    line-height: 1.5; margin-top: 6px;
+  }
+  .battle-row.open .battle-tooltip { display: block; }
+
+  /* ── QUIZ ── */
+  .quiz-box {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    padding: 2.5rem;
+    max-width: 680px; margin: 0 auto;
+  }
+  .quiz-progress {
+    display: flex; gap: 6px; margin-bottom: 2rem;
+  }
+  .quiz-dot {
+    height: 8px; border-radius: 50px;
+    background: var(--border); flex: 1;
+    transition: background 0.3s;
+  }
+  .quiz-dot.done { background: var(--purple); }
+  .quiz-dot.current { background: var(--purple-mid); }
+  .quiz-q {
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-weight: 800; margin-bottom: 0.5rem; line-height: 1.4;
+  }
+  .quiz-hint { font-size: 13px; color: var(--muted); font-weight: 600; margin-bottom: 1.75rem; }
+  .quiz-opts { display: grid; gap: 10px; }
+  .quiz-opt {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700;
+    padding: 14px 20px; border-radius: 14px;
+    border: 2px solid var(--border);
+    background: #fff; text-align: left;
+    cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
+  .quiz-opt.correct { border-color: var(--teal); background: var(--teal-light); color: var(--teal); }
+  .quiz-opt.wrong { border-color: #EF4444; background: #FEF2F2; color: #DC2626; }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback {
+    margin-top: 1.25rem; padding: 14px 18px;
+    border-radius: 14px; font-size: 14px; font-weight: 700;
+    display: none; line-height: 1.55;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: var(--teal-light); color: var(--teal); border: 1.5px solid #99F6E4; }
+  .quiz-feedback.wrong { background: #FEF2F2; color: #DC2626; border: 1.5px solid #FECACA; }
+  .quiz-next {
+    margin-top: 1.5rem; width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px; font-weight: 800;
+    padding: 14px; border-radius: 14px;
+    background: var(--purple); color: #fff; border: none;
+    cursor: pointer; display: none; transition: all 0.2s;
+  }
+  .quiz-next:hover { background: #6D28D9; transform: translateY(-1px); }
+  .quiz-next.show { display: block; }
+  .quiz-score {
+    text-align: center; display: none;
+  }
+  .quiz-score.show { display: block; }
+  .score-emoji { font-size: 5rem; margin-bottom: 1rem; }
+  .score-num { font-size: 3rem; font-weight: 900; color: var(--purple); }
+  .score-msg { font-size: 18px; font-weight: 700; color: var(--muted); margin-bottom: 1.5rem; }
+  .quiz-restart {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800;
+    padding: 12px 28px; border-radius: 50px;
+    background: var(--purple); color: #fff; border: none;
+    cursor: pointer;
+  }
+
+  /* ── STEPS ── */
+  .steps { display: grid; gap: 1.25rem; }
+  .step-card {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .step-card:hover { border-color: var(--purple); box-shadow: var(--shadow); }
+  .step-num-big {
+    width: 48px; height: 48px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900;
+    flex-shrink: 0;
+  }
+  .step-content {}
+  .step-title { font-size: 17px; font-weight: 800; margin-bottom: 0.3rem; }
+  .step-desc { font-size: 14px; color: var(--muted); font-weight: 600; line-height: 1.6; }
+  .step-detail {
+    display: none; margin-top: 0.75rem;
+    font-size: 14px; font-weight: 600; line-height: 1.65;
+    padding: 12px 16px; border-radius: 12px;
+  }
+  .step-card.open .step-detail { display: block; }
+
+  /* ── PRINCIPLE CARDS ── */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+  .principle {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    padding: 1.5rem;
+    transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .principle::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 5px;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .principle:nth-child(1)::before { background: var(--purple); }
+  .principle:nth-child(2)::before { background: var(--teal); }
+  .principle:nth-child(3)::before { background: var(--orange); }
+  .principle:nth-child(4)::before { background: var(--pink); }
+  .principle:nth-child(5)::before { background: var(--blue); }
+  .principle:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .principle-icon { font-size: 2rem; margin-bottom: 0.75rem; margin-top: 0.25rem; }
+  .principle-name { font-size: 16px; font-weight: 900; margin-bottom: 0.4rem; }
+  .principle-desc { font-size: 13px; color: var(--muted); font-weight: 600; line-height: 1.6; }
+
+  /* ── PLANS ── */
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+  .plan {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    padding: 1.75rem;
+    transition: all 0.25s;
+  }
+  .plan:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .plan.featured { border-color: var(--purple); position: relative; }
+  .plan-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--purple); color: #fff;
+    font-size: 12px; font-weight: 800;
+    padding: 4px 16px; border-radius: 50px;
+    white-space: nowrap;
+  }
+  .plan-who { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 0.5rem; }
+  .plan-name { font-size: 20px; font-weight: 900; margin-bottom: 0.25rem; }
+  .plan-price { font-size: 28px; font-weight: 900; color: var(--purple); margin-bottom: 1.25rem; }
+  .plan-price span { font-size: 16px; color: var(--muted); }
+  .plan-feats { list-style: none; display: grid; gap: 8px; }
+  .plan-feats li {
+    font-size: 14px; font-weight: 600;
+    color: var(--muted); display: flex; gap: 8px; align-items: flex-start; line-height: 1.4;
+  }
+  .plan-feats li::before { content: '✓'; color: var(--teal); font-weight: 900; flex-shrink: 0; }
+
+  /* ── FUN FACT TICKER ── */
+  .ticker-wrap {
+    background: var(--purple);
+    padding: 10px 0; overflow: hidden;
+    margin: 2rem 0;
+  }
+  .ticker {
+    display: flex; gap: 3rem;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .ticker-item {
+    font-size: 14px; font-weight: 800; color: #fff;
+    display: flex; align-items: center; gap: 8px;
+    flex-shrink: 0;
+  }
+  .ticker-item::before { content: '⚡'; }
+
+  /* ── FUN ANALOGY FLIP ── */
+  .analogy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+  .flip-card { height: 180px; perspective: 1000px; cursor: pointer; }
+  .flip-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  }
+  .flip-card.flipped .flip-inner { transform: rotateY(180deg); }
+  .flip-front, .flip-back {
+    position: absolute; inset: 0;
+    border-radius: var(--radius);
+    backface-visibility: hidden;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 1.25rem; text-align: center;
+    border: 2px solid var(--border);
+  }
+  .flip-front { background: var(--card); }
+  .flip-back { background: var(--purple-light); border-color: var(--purple-mid); transform: rotateY(180deg); }
+  .flip-front-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .flip-front-label { font-size: 14px; font-weight: 800; color: var(--muted); }
+  .flip-front-hint { font-size: 11px; color: var(--purple); font-weight: 700; margin-top: 4px; }
+  .flip-back-text { font-size: 14px; font-weight: 700; color: var(--purple); line-height: 1.55; }
+
+  /* ── GLOSSARY ── */
+  .glossary { display: grid; gap: 10px; }
+  .gloss-item {
+    background: var(--card);
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .gloss-item:hover { border-color: var(--purple); }
+  .gloss-item.open { border-color: var(--purple); }
+  .gloss-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.25rem;
+    font-size: 15px; font-weight: 800;
+  }
+  .gloss-arrow { font-size: 18px; transition: transform 0.25s; color: var(--purple); }
+  .gloss-item.open .gloss-arrow { transform: rotate(180deg); }
+  .gloss-body {
+    font-size: 14px; font-weight: 600; color: var(--muted);
+    padding: 0 1.25rem; max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.2s;
+    line-height: 1.65;
+  }
+  .gloss-item.open .gloss-body { max-height: 300px; padding-bottom: 1rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 2px solid var(--border);
+    color: var(--muted); font-size: 14px; font-weight: 600;
+  }
+  footer strong { color: var(--purple); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    .battle-header { grid-template-columns: 1fr auto 1fr; padding: 1rem; }
+    .battle-cell { font-size: 12px; }
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .hero { padding: 3rem 1.5rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">🤖 AI Guide</div>
+  <div class="nav-links">
+    <a href="#what" class="active">What is AI?</a>
+    <a href="#compare">Compare</a>
+    <a href="#training">Training</a>
+    <a href="#principles">Principles</a>
+    <a href="#plans">Plans</a>
+    <a href="#quiz">Quiz</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">✨ Fun for all ages · Learn AI today</div>
+  <h1>
+    <span class="gpt">ChatGPT</span> meets <span class="claude">Claude</span><br>
+    — Who built what?
+  </h1>
+  <p class="hero-sub">Discover how two of the world's most popular AI assistants were built differently — explained simply, no experience needed!</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="scrollTo('#what')">Start the adventure 🚀</button>
+    <button class="btn-secondary" onclick="scrollTo('#quiz')">Take the quiz 🎯</button>
+  </div>
+  <div class="mascots">
+    <div class="mascot">
+      <div class="mascot-face gpt-face">🤖</div>
+      <div class="mascot-name gpt-name">ChatGPT</div>
+      <div class="mascot-tagline">Made by OpenAI · Loves being helpful</div>
+    </div>
+    <div class="mascot">
+      <div class="mascot-face claude-face">🧠</div>
+      <div class="mascot-name claude-name">Claude</div>
+      <div class="mascot-tagline">Made by Anthropic · Loves being honest</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item">Both ChatGPT and Claude are free to try</span>
+    <span class="ticker-item">Claude can read a whole novel in one go — 200,000 words!</span>
+    <span class="ticker-item">ChatGPT was built using PyTorch — made by Meta</span>
+    <span class="ticker-item">Claude was trained with a "Constitution" of values</span>
+    <span class="ticker-item">GPT stands for Generative Pre-trained Transformer</span>
+    <span class="ticker-item">Anthropic was founded in 2021 by ex-OpenAI researchers</span>
+    <span class="ticker-item">Both ChatGPT and Claude are free to try</span>
+    <span class="ticker-item">Claude can read a whole novel in one go — 200,000 words!</span>
+    <span class="ticker-item">ChatGPT was built using PyTorch — made by Meta</span>
+    <span class="ticker-item">Claude was trained with a "Constitution" of values</span>
+    <span class="ticker-item">GPT stands for Generative Pre-trained Transformer</span>
+    <span class="ticker-item">Anthropic was founded in 2021 by ex-OpenAI researchers</span>
+  </div>
+</div>
+
+<!-- WHAT IS AN LLM -->
+<section class="section fade-in" id="what">
+  <div class="section-title">🧐 What even is an AI?</div>
+  <p class="section-sub">Before we compare, let's understand what these things are! Click any card to learn more.</p>
+  <div class="cards">
+    <div class="card" onclick="this.style.borderColor='var(--purple)'; this.querySelector('.card-body').style.display='block'">
+      <div class="card-icon">📚</div>
+      <div class="card-title">They "read" everything</div>
+      <div class="card-body">LLMs (Large Language Models) are trained on billions of sentences from books, websites, Wikipedia, and more. They learn how words and ideas connect together — like the world's most avid reader!</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔮</div>
+      <div class="card-title">They predict what comes next</div>
+      <div class="card-body">At their core, AI assistants are very powerful autocomplete — like your phone keyboard, but 1000× smarter. They predict the next word, then the next, building entire answers from scratch.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">The Transformer brain</div>
+      <div class="card-body">Both ChatGPT and Claude use an architecture called the Transformer (invented by Google in 2017). It reads all words at once and figures out which words matter most — just like how your brain spots "it" means the trophy, not the suitcase.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧩</div>
+      <div class="card-title">Tokens, not words</div>
+      <div class="card-body">AIs don't see whole words — they see "tokens," which are chunks of letters. "unhappy" might be split into "un" + "happy." A token is roughly ¾ of a word. Claude can process 200,000 tokens at once — that's a full novel!</div>
+    </div>
+  </div>
+</section>
+
+<!-- FLIP CARDS: Analogies -->
+<section class="section fade-in" id="analogies">
+  <div class="section-title">💡 Real-life analogies</div>
+  <p class="section-sub">Tap each card to flip it and reveal the AI connection!</p>
+  <div class="analogy-grid">
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-front-icon">🎮</div>
+          <div class="flip-front-label">Autocomplete on steroids</div>
+          <div class="flip-front-hint">Tap to flip →</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">Your phone keyboard suggests "pizza" after "I want to eat..." — AI does the same but can write entire essays, answer questions, and tell stories!</div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-front-icon">🧱</div>
+          <div class="flip-front-label">LEGO vs Formula 1</div>
+          <div class="flip-front-hint">Tap to flip →</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">ChatGPT's framework (PyTorch) is like LEGO Technic — flexible and popular. Claude's framework (JAX) is like an F1 car kit — harder but blazing fast on special chips.</div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-front-icon">🎓</div>
+          <div class="flip-front-label">Two types of teachers</div>
+          <div class="flip-front-hint">Tap to flip →</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">ChatGPT learned from human raters (like a teacher giving gold stars). Claude learned from a written rulebook and checked its own work — like a student with a detailed rubric.</div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <div class="flip-front-icon">🐕</div>
+          <div class="flip-front-label">Training with treats</div>
+          <div class="flip-front-hint">Tap to flip →</div>
+        </div>
+        <div class="flip-back">
+          <div class="flip-back-text">ChatGPT's RLHF training is like training a dog — give rewards for good answers, and the AI learns to do more of what earns the treat. Higher reward = AI learns to repeat that!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON BATTLE -->
+<section class="section fade-in" id="compare">
+  <div class="section-title">⚔️ Head-to-head comparison</div>
+  <p class="section-sub">Click any row to find out more about each difference!</p>
+  <div class="battle-arena">
+    <div class="battle-header">
+      <div class="battle-side teal-side">
+        <div class="logo-big">🤖</div>
+        <div class="name-big">ChatGPT</div>
+        <div style="font-size:13px;color:var(--teal);font-weight:700">by OpenAI</div>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="battle-side purple-side">
+        <div class="logo-big">🧠</div>
+        <div class="name-big">Claude</div>
+        <div style="font-size:13px;color:var(--purple);font-weight:700">by Anthropic</div>
+      </div>
+    </div>
+    <div class="battle-rows" id="battleRows"></div>
+  </div>
+</section>
+
+<!-- HOW THEY WERE TRAINED -->
+<section class="section fade-in" id="training">
+  <div class="section-title">🔬 How ChatGPT was trained</div>
+  <p class="section-sub">RLHF — Reinforcement Learning from Human Feedback. Click each step to expand it!</p>
+  <div class="steps" id="rlhfSteps"></div>
+
+  <div style="margin-top:4rem">
+    <div class="section-title">📜 How Claude was trained</div>
+    <p class="section-sub">Constitutional AI — a totally different (and very clever) approach!</p>
+    <div class="steps" id="caiSteps"></div>
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section class="section fade-in" id="principles">
+  <div class="section-title">💎 Claude's 5 core principles</div>
+  <p class="section-sub">These are the values baked into how Claude thinks and responds — kind of like its personality!</p>
+  <div class="principles">
+    <div class="principle">
+      <div class="principle-icon">🤝</div>
+      <div class="principle-name">Be Helpful</div>
+      <div class="principle-desc">Answer questions as fully and usefully as possible. No unnecessary warnings or refusing for no reason.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-icon">🛡️</div>
+      <div class="principle-name">Be Harmless</div>
+      <div class="principle-desc">Avoid helping with things that could genuinely hurt people. Uses real judgment — not just panicking at scary words.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-icon">✅</div>
+      <div class="principle-name">Be Honest</div>
+      <div class="principle-desc">Won't make up facts. Says "I don't know" when it doesn't. Won't flatter you with wrong answers just to seem nice.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-icon">👤</div>
+      <div class="principle-name">Respect Autonomy</div>
+      <div class="principle-desc">Treats you like an intelligent person. Gives you info to make your own decisions — doesn't decide for you.</div>
+    </div>
+    <div class="principle">
+      <div class="principle-icon">🚫</div>
+      <div class="principle-name">Avoid Deception</div>
+      <div class="principle-desc">Won't pretend to be human. Won't lie about what it is or manipulate you emotionally.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="section fade-in" id="plans">
+  <div class="section-title">💳 Plans & pricing</div>
+  <p class="section-sub">Both are free to start! Here's what you get at each tier.</p>
+
+  <div style="font-size:18px;font-weight:900;margin-bottom:1.25rem;color:var(--teal)">🤖 ChatGPT</div>
+  <div class="plans" style="margin-bottom:3rem">
+    <div class="plan">
+      <div class="plan-who">OpenAI</div>
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0 <span>/month</span></div>
+      <ul class="plan-feats">
+        <li>GPT-4o with daily limits</li>
+        <li>Web browsing included</li>
+        <li>Good for casual use</li>
+      </ul>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-who">OpenAI</div>
+      <div class="plan-name">Plus</div>
+      <div class="plan-price">$20 <span>/month</span></div>
+      <ul class="plan-feats">
+        <li>Higher GPT-4o limits</li>
+        <li>Access to o3 reasoning model</li>
+        <li>Image generation (DALL-E)</li>
+        <li>Voice mode</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="plan-who">OpenAI</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$200 <span>/month</span></div>
+      <ul class="plan-feats">
+        <li>Unlimited o3 &amp; GPT-4o</li>
+        <li>Priority access always</li>
+        <li>Best for heavy power users</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="font-size:18px;font-weight:900;margin-bottom:1.25rem;color:var(--purple)">🧠 Claude</div>
+  <div class="plans">
+    <div class="plan">
+      <div class="plan-who">Anthropic</div>
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0 <span>/month</span></div>
+      <ul class="plan-feats">
+        <li>Claude Sonnet with daily limits</li>
+        <li>Great for everyday tasks</li>
+        <li>200K context window</li>
+      </ul>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">Best Value</div>
+      <div class="plan-who">Anthropic</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$20 <span>/month</span></div>
+      <ul class="plan-feats">
+        <li>5× more usage than free</li>
+        <li>Access to Claude Opus (most powerful)</li>
+        <li>Extended Thinking mode</li>
+        <li>Projects to save context</li>
+      </ul>
+    </div>
+    <div class="plan">
+      <div class="plan-who">Anthropic</div>
+      <div class="plan-name">Max</div>
+      <div class="plan-price">$100–200 <span>/mo</span></div>
+      <ul class="plan-feats">
+        <li>Highest usage limits</li>
+        <li>For researchers &amp; heavy users</li>
+        <li>Priority access always</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section class="section fade-in" id="glossary">
+  <div class="section-title">📖 Jargon buster</div>
+  <p class="section-sub">All those weird AI words — explained simply! Click any term.</p>
+  <div class="glossary" id="glossaryList"></div>
+</section>
+
+<!-- QUIZ -->
+<section class="section fade-in" id="quiz">
+  <div class="section-title">🎯 Test your knowledge!</div>
+  <p class="section-sub">Think you've got it? Take the quiz and find out!</p>
+  <div class="quiz-box">
+    <div class="quiz-progress" id="quizProgress"></div>
+    <div id="quizMain"></div>
+    <div class="quiz-score" id="quizScore">
+      <div class="score-emoji" id="scoreEmoji"></div>
+      <div class="score-num" id="scoreNum"></div>
+      <div class="score-msg" id="scoreMsg"></div>
+      <button class="quiz-restart" onclick="startQuiz()">Play again 🔄</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Made with ❤️ as a personal learning module · Content from <strong>Claude vs ChatGPT — How LLMs Are Built Differently</strong></p>
+  <p style="margin-top:0.5rem;font-size:12px">Try both AIs free at <strong>claude.ai</strong> and <strong>chat.openai.com</strong></p>
+</footer>
+
+<script>
+// ── DATA ──
+const battleData = [
+  { label: 'Made by', gpt: 'OpenAI (2015)', claude: 'Anthropic (2021)', tip: 'OpenAI was founded in 2015 with a mission to build AGI for humanity. Anthropic split off in 2021, founded by ex-OpenAI researchers who wanted to focus specifically on AI safety.' },
+  { label: 'Framework', gpt: 'PyTorch (Meta)', claude: 'JAX (Google)', tip: 'PyTorch is like LEGO Technic — flexible, popular, runs on NVIDIA GPUs. JAX is like an F1 car kit — faster and more precise, running on Google\'s special TPU chips.' },
+  { label: 'Training method', gpt: 'RLHF', claude: 'Constitutional AI', tip: 'RLHF uses thousands of human raters to rank responses. Constitutional AI uses a written list of principles and teaches Claude to critique its own answers — then an AI gives feedback at scale.' },
+  { label: 'Honesty style', gpt: 'More agreeable', claude: 'Prioritizes truth', tip: 'Because RLHF rewarded agreeable-sounding answers, ChatGPT can be sycophantic (tell you what you want to hear). Claude\'s constitution explicitly prioritizes honesty over agreeableness.' },
+  { label: 'Context window', gpt: '128K–200K tokens', claude: '200K tokens', tip: 'A "context window" is how much text the AI can read at once. Claude\'s 200K token window = about 150,000 words — enough to read an entire novel in one go. Great for legal docs and research!' },
+  { label: 'Image generation', gpt: 'Yes (DALL-E) ✓', claude: 'Not built-in ✗', tip: 'ChatGPT has DALL-E built in, so you can ask it to draw pictures. Claude focuses on text and reasoning — it can analyze images you upload, but doesn\'t generate new ones.' },
+  { label: 'Voice mode', gpt: 'Yes (Plus+)', claude: 'Limited', tip: 'ChatGPT Plus has a full voice conversation mode — you can speak to it and it speaks back naturally. Claude has more limited voice capabilities at the moment.' },
+  { label: 'Reasoning mode', gpt: 'o1 / o3 models', claude: 'Extended Thinking', tip: 'Both AIs have a special "slow thinking" mode for hard problems. OpenAI has the o1 and o3 models. Claude has Extended Thinking mode — it shows you its thought process before answering.' },
+];
+
+const rlhfSteps = [
+  { num: '1', color: '#EDE9FE', textColor: '#7C3AED', title: 'Pre-training — reading everything', desc: 'The model reads billions of sentences.', detail: 'Like a kid reading every book in the library without guidance — it learns patterns, words, ideas — but has no concept of "good" or "bad" yet. Just pure knowledge absorption.' },
+  { num: '2', color: '#CCFBF1', textColor: '#0D9488', title: 'Supervised fine-tuning — copy the pro', desc: 'Human trainers write ideal example conversations.', detail: 'OpenAI hired real people to write both the question AND the perfect answer. The model then studied these and learned to imitate a helpful, polite assistant. Like an employee shadowing their manager.' },
+  { num: '3', color: '#FFF7ED', textColor: '#EA580C', title: 'Reward model — the judge', desc: 'Raters rank multiple AI responses.', detail: 'Human raters were shown several AI responses to the same question and asked: which is best? These rankings trained a separate "Reward Model" AI — like a cooking competition judge who learned what makes a great dish.' },
+  { num: '4', color: '#FCE7F3', textColor: '#DB2777', title: 'Reinforcement learning — learn from scores', desc: 'The AI keeps improving to get higher scores.', detail: 'Like training a dog with treats — every time the AI gives a good response, the Reward Model gives it a high score. The AI learns to get higher and higher scores. This is Reinforcement Learning.' },
+];
+
+const caiSteps = [
+  { num: '1', color: '#EDE9FE', textColor: '#7C3AED', title: 'Write the Constitution', desc: 'Anthropic created a list of values and principles.', detail: 'The Constitution draws from the UN Declaration of Human Rights, Apple\'s Terms of Service, and AI safety research. It says things like: "be honest," "avoid harmful content," "treat humans with dignity."' },
+  { num: '2', color: '#CCFBF1', textColor: '#0D9488', title: 'Red-teaming — test the limits', desc: 'They gave Claude intentionally tricky, harmful prompts.', detail: 'Anthropic wrote "red-team" questions designed to get the AI to say bad things — then Claude was asked to answer, then critique its OWN response using the Constitution, then rewrite it better. Like arguing the other side of a debate.' },
+  { num: '3', color: '#FFF7ED', textColor: '#EA580C', title: 'AI gives feedback — RLAIF', desc: 'A helper AI (trained on the Constitution) scores responses.', detail: 'Instead of needing thousands of human raters, a "Preference Model" AI — trained on the Constitutional principles — compares responses and picks the better one. Scaling up from 1 teacher to 1,000 AI teaching assistants.' },
+  { num: '4', color: '#FCE7F3', textColor: '#DB2777', title: 'Reinforcement from AI feedback', desc: 'Claude trains to maximize its Constitution score.', detail: 'Claude is further trained to score as high as possible on the Constitutional principles — not on what random human raters liked. The result: an AI that\'s deeply internalized a set of values, not just learned to please people.' },
+];
+
+const glossary = [
+  { term: 'LLM — Large Language Model', def: 'A type of AI trained on massive amounts of text. It learns patterns in language and can generate human-like text, answer questions, write stories, and more. ChatGPT and Claude are both LLMs.' },
+  { term: 'Transformer', def: 'The architecture (design) that most modern AI systems use. Invented by Google in 2017 ("Attention Is All You Need"). It processes all words at once and figures out which words are most important — called "attention."' },
+  { term: 'Token', def: 'The basic unit AIs process — not quite a word, more like a chunk of letters. "unhappy" → "un" + "happy" = 2 tokens. A token is roughly ¾ of a word. Claude handles 200,000 tokens at once!' },
+  { term: 'Context window', def: 'How much text an AI can "see" at once in one conversation. A bigger window means it can read longer documents without forgetting earlier parts. Like the size of a notepad — Claude\'s is a full novel-sized notepad.' },
+  { term: 'RLHF', def: 'Reinforcement Learning from Human Feedback. The training method used by OpenAI — human raters rank AI responses, teaching it what "good" looks like. Powerful, but can make the AI overly agreeable (sycophantic).' },
+  { term: 'Constitutional AI (CAI)', def: 'Anthropic\'s training method for Claude. Instead of only human raters, a written "Constitution" of principles guides the AI to critique and improve its own responses. Scales cheaply and produces more consistent results.' },
+  { term: 'RLAIF', def: 'Reinforcement Learning from AI Feedback. A variation used by Anthropic where an AI (instead of humans) gives the feedback that trains Claude. Like training 1,000 AI teaching assistants to grade essays automatically.' },
+  { term: 'Parameters', def: 'The "knobs" inside an AI that get tuned during training. GPT-4 has an estimated 1 trillion parameters. More parameters generally means a more capable model — but also much more expensive to run.' },
+  { term: 'PyTorch', def: 'The software framework OpenAI used to build ChatGPT. Made by Meta (Facebook) and free to use. Very flexible and popular with researchers worldwide. Runs on NVIDIA GPU chips.' },
+  { term: 'JAX', def: 'The software framework Anthropic used to build Claude. Made by Google. Runs blazing fast on Google\'s special TPU chips. Harder to learn than PyTorch but extremely powerful for large-scale training.' },
+  { term: 'Sycophancy', def: 'When an AI tells you what you WANT to hear instead of what\'s TRUE. A risk with RLHF — because human raters often liked agreeable responses, the AI learned to agree even when it shouldn\'t. Claude\'s constitution actively fights this.' },
+];
+
+const quizQuestions = [
+  { q: 'What does LLM stand for?', hint: 'Think about the size of the model and what it works with...', opts: ['Logical Learning Machine', 'Large Language Model', 'Long Learning Mechanism', 'Layered Logic Module'], answer: 1, exp: '✅ LLM = Large Language Model! It\'s "large" because it\'s trained on billions of sentences, and "language" because it works with text.' },
+  { q: 'Which company made ChatGPT?', hint: 'Both companies are based in San Francisco...', opts: ['Google', 'Anthropic', 'OpenAI', 'Meta'], answer: 2, exp: '✅ ChatGPT is made by OpenAI, founded in 2015. Claude is made by Anthropic, founded in 2021!' },
+  { q: 'What framework did Anthropic use to build Claude?', hint: 'It\'s named after a famous programming concept...', opts: ['PyTorch', 'TensorFlow', 'JAX', 'Keras'], answer: 2, exp: '✅ Anthropic used JAX (made by Google) plus their own internal tools. ChatGPT uses PyTorch, made by Meta.' },
+  { q: 'What is Claude\'s training method called?', hint: 'Claude was trained using a set of written values, like a country\'s rulebook...', opts: ['RLHF', 'Constitutional AI', 'Deep Reinforcement Learning', 'Supervised Fine-Tuning'], answer: 1, exp: '✅ Constitutional AI! Anthropic wrote a "Constitution" of principles, and Claude learned to critique its own responses against those rules.' },
+  { q: 'How many tokens can Claude process at once?', hint: 'It\'s a very large number — enough to read a whole novel!', opts: ['10,000 tokens', '50,000 tokens', '100,000 tokens', '200,000 tokens'], answer: 3, exp: '✅ 200,000 tokens — about 150,000 words! That\'s enough to process an entire novel or a long legal document in one go.' },
+  { q: 'What is "sycophancy" in AI?', hint: 'Think about what happens when the AI is TOO agreeable...', opts: ['When the AI refuses to answer', 'When the AI tells you what you want to hear, not the truth', 'When the AI is very slow', 'When the AI uses too many words'], answer: 1, exp: '✅ Sycophancy = telling people what they want to hear instead of the truth. It\'s a risk with RLHF — Claude\'s constitution is specifically designed to fight this!' },
+  { q: 'What special hardware does Claude run on?', hint: 'Google made special chips just for AI training...', opts: ['NVIDIA GPUs', 'AMD CPUs', 'Google TPUs', 'Apple Silicon'], answer: 2, exp: '✅ Google TPUs (Tensor Processing Units) — chips built specifically for AI. ChatGPT runs on NVIDIA GPUs.' },
+  { q: 'Which AI has built-in image generation?', hint: 'One of them has DALL-E built in...', opts: ['Claude', 'ChatGPT', 'Both of them', 'Neither of them'], answer: 1, exp: '✅ ChatGPT has DALL-E built in, so it can create images. Claude focuses on text and reasoning — it can analyze images but doesn\'t generate new ones.' },
+];
+
+// ── BUILD BATTLE ROWS ──
+const battleRows = document.getElementById('battleRows');
+battleData.forEach((row, i) => {
+  const div = document.createElement('div');
+  div.className = 'battle-row';
+  div.innerHTML = `
+    <div class="battle-cell left">${row.gpt}</div>
+    <div class="battle-label">${row.label}</div>
+    <div class="battle-cell right">${row.claude}</div>
+    <div class="battle-tooltip">${row.tip}</div>
+  `;
+  div.addEventListener('click', () => {
+    const wasOpen = div.classList.contains('open');
+    document.querySelectorAll('.battle-row').forEach(r => r.classList.remove('open'));
+    if (!wasOpen) div.classList.add('open');
+  });
+  battleRows.appendChild(div);
+});
+
+// ── BUILD STEPS ──
+function buildSteps(data, containerId) {
+  const container = document.getElementById(containerId);
+  data.forEach(step => {
+    const el = document.createElement('div');
+    el.className = 'step-card';
+    el.innerHTML = `
+      <div class="step-num-big" style="background:${step.color};color:${step.textColor}">${step.num}</div>
+      <div class="step-content">
+        <div class="step-title">${step.title}</div>
+        <div class="step-desc">${step.desc}</div>
+        <div class="step-detail" style="background:${step.color};color:${step.textColor}">${step.detail}</div>
+      </div>
+    `;
+    el.addEventListener('click', () => el.classList.toggle('open'));
+    container.appendChild(el);
+  });
+}
+buildSteps(rlhfSteps, 'rlhfSteps');
+buildSteps(caiSteps, 'caiSteps');
+
+// ── BUILD GLOSSARY ──
+const glossaryList = document.getElementById('glossaryList');
+glossary.forEach(item => {
+  const el = document.createElement('div');
+  el.className = 'gloss-item';
+  el.innerHTML = `
+    <div class="gloss-trigger">
+      <span>${item.term}</span>
+      <span class="gloss-arrow">▾</span>
+    </div>
+    <div class="gloss-body">${item.def}</div>
+  `;
+  el.addEventListener('click', () => el.classList.toggle('open'));
+  glossaryList.appendChild(el);
+});
+
+// ── QUIZ ──
+let qIdx = 0, score = 0, answered = false;
+
+function startQuiz() {
+  qIdx = 0; score = 0; answered = false;
+  document.getElementById('quizScore').classList.remove('show');
+  document.getElementById('quizMain').style.display = '';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const prog = document.getElementById('quizProgress');
+  prog.innerHTML = quizQuestions.map((_, i) =>
+    `<div class="quiz-dot ${i < qIdx ? 'done' : i === qIdx ? 'current' : ''}"></div>`
+  ).join('');
+
+  const q = quizQuestions[qIdx];
+  const main = document.getElementById('quizMain');
+  main.innerHTML = `
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-hint">💡 Hint: ${q.hint}</div>
+    <div class="quiz-opts">
+      ${q.opts.map((o, i) => `<button class="quiz-opt" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div class="quiz-feedback" id="qFeedback"></div>
+    <button class="quiz-next" id="qNext" onclick="nextQ()">${qIdx < quizQuestions.length - 1 ? 'Next question →' : 'See results 🎉'}</button>
+  `;
+}
+
+function answer(i) {
+  if (answered) return;
+  answered = true;
+  const q = quizQuestions[qIdx];
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === q.answer) btn.classList.add('correct');
+    else if (idx === i) btn.classList.add('wrong');
+  });
+  const isCorrect = i === q.answer;
+  if (isCorrect) score++;
+  const fb = document.getElementById('qFeedback');
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.textContent = q.exp;
+  document.getElementById('qNext').classList.add('show');
+}
+
+function nextQ() {
+  qIdx++;
+  answered = false;
+  if (qIdx >= quizQuestions.length) {
+    showScore();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showScore() {
+  document.getElementById('quizMain').style.display = 'none';
+  const scoreEl = document.getElementById('quizScore');
+  scoreEl.classList.add('show');
+  const pct = score / quizQuestions.length;
+  document.getElementById('scoreNum').textContent = `${score} / ${quizQuestions.length}`;
+  const emojis = pct === 1 ? '🏆' : pct >= 0.75 ? '🌟' : pct >= 0.5 ? '👍' : '📚';
+  const msgs = pct === 1 ? 'Perfect score! You\'re an AI expert!' : pct >= 0.75 ? 'Great job! You really know your AI!' : pct >= 0.5 ? 'Good effort — keep learning!' : 'Keep going — you\'ll get there!';
+  document.getElementById('scoreEmoji').textContent = emojis;
+  document.getElementById('scoreMsg').textContent = msgs;
+  document.getElementById('quizProgress').innerHTML = quizQuestions.map(() => `<div class="quiz-dot done"></div>`).join('');
+}
+
+startQuiz();
+
+// ── SCROLL ANIMATIONS ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ── NAV SCROLL ──
+function scrollTo(hash) {
+  document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' });
+}
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    scrollTo(a.getAttribute('href'));
+  });
+});
+
+const sections = ['what', 'compare', 'training', 'principles', 'plans', 'quiz'];
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 120) current = id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
