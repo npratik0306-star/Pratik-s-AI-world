@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Adventure Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7C3AED;--pl:#EDE9FE;--pm:#A78BFA;
+  --teal:#0D9488;--tl:#CCFBF1;
+  --pink:#DB2777;
+  --yellow:#D97706;--yl:#FFFBEB;
+  --orange:#EA580C;
+  --blue:#2563EB;
+  --bg:#F8F7FF;--card:#fff;--text:#1E1B4B;--muted:#6B7280;
+  --border:#E5E7EB;--r:20px;--sh:0 4px 24px rgba(124,58,237,.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:300;background:rgba(248,247,255,.97);backdrop-filter:blur(12px);border-bottom:1.5px solid #EDE9FE;padding:0 2rem;display:flex;align-items:center;gap:.5rem;height:62px;}
+.nav-logo{font-size:17px;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-right:auto;cursor:pointer;text-decoration:none;}
+.nav-links{display:flex;gap:3px;}
+.nav-links button{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--muted);background:none;border:none;padding:7px 15px;border-radius:50px;cursor:pointer;transition:all .2s;}
+.nav-links button:hover{background:var(--pl);color:var(--purple);}
+.nav-links button.active{background:var(--purple);color:#fff;}
+.xp-pill{background:var(--yl);border:1.5px solid #FDE68A;color:var(--yellow);font-size:13px;font-weight:800;padding:6px 14px;border-radius:50px;white-space:nowrap;}
+
+/* ── PAGE VIEWS ── */
+.page{display:none;animation:fadeIn .35s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HOME HERO ── */
+.hero{text-align:center;padding:5rem 2rem 3rem;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,#EDE9FE 0%,transparent 70%);pointer-events:none;}
+.hero-badge{display:inline-block;background:var(--pl);color:var(--purple);font-size:13px;font-weight:800;padding:6px 18px;border-radius:50px;margin-bottom:1.4rem;border:1.5px solid #DDD6FE;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:1rem;}
+.hl{color:var(--purple);}.hl2{color:var(--teal);}
+.hero-sub{font-size:clamp(1rem,2.2vw,1.15rem);color:var(--muted);font-weight:600;max-width:540px;margin:0 auto 2.5rem;line-height:1.65;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem;}
+.btn{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;padding:14px 30px;border-radius:50px;border:none;cursor:pointer;transition:all .2s;}
+.btn-p{background:var(--purple);color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.35);}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(124,58,237,.45);}
+.btn-s{background:#fff;color:var(--purple);border:2px solid var(--purple);}
+.btn-s:hover{background:var(--pl);}
+
+/* mascots */
+.mascots{display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;margin-top:1rem;}
+.mascot{text-align:center;animation:float 3s ease-in-out infinite;}
+.mascot:nth-child(2){animation-delay:1.5s;}
+.m-face{width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto .6rem;border:4px solid transparent;}
+.gpt-f{background:var(--tl);border-color:var(--teal);}
+.cla-f{background:var(--pl);border-color:var(--purple);}
+.m-name{font-size:14px;font-weight:900;}
+.m-tag{font-size:11px;color:var(--muted);font-weight:600;max-width:110px;}
+
+/* ── WHAT YOU'LL LEARN ── */
+.section{padding:3.5rem 2rem;max-width:1100px;margin:0 auto;}
+.sec-t{font-size:clamp(1.4rem,3.5vw,2.1rem);font-weight:900;text-align:center;margin-bottom:.5rem;}
+.sec-s{text-align:center;color:var(--muted);font-size:15px;font-weight:600;margin-bottom:2.2rem;line-height:1.6;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;}
+.feat-card{background:var(--card);border:2px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:all .25s;}
+.feat-card:hover{transform:translateY(-3px);box-shadow:var(--sh);border-color:var(--pm);}
+.feat-icon{font-size:2rem;margin-bottom:.7rem;}
+.feat-title{font-size:16px;font-weight:900;margin-bottom:.35rem;}
+.feat-body{font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;}
+
+/* module preview strip on home */
+.mod-preview{background:linear-gradient(135deg,#1E1B4B,#312E81);padding:3.5rem 2rem;}
+.mod-preview-inner{max-width:1100px;margin:0 auto;}
+.mod-preview .sec-t{color:#fff;}.mod-preview .sec-s{color:#A78BFA;}
+.preview-strip{display:flex;gap:1rem;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:thin;}
+.preview-card{background:rgba(255,255,255,.08);border:2px solid rgba(167,139,250,.3);border-radius:16px;padding:1.2rem;min-width:220px;flex-shrink:0;color:#fff;cursor:pointer;transition:all .2s;}
+.preview-card:hover{background:rgba(255,255,255,.14);border-color:var(--pm);}
+.preview-card.locked-c{opacity:.45;cursor:default;}
+.pc-icon{font-size:1.8rem;margin-bottom:.4rem;}
+.pc-title{font-size:14px;font-weight:900;margin-bottom:.2rem;}
+.pc-tag{font-size:11px;font-weight:800;color:#A78BFA;}
+
+/* ticker */
+.ticker-wrap{background:var(--purple);padding:9px 0;overflow:hidden;}
+.ticker{display:flex;gap:3rem;animation:tick 35s linear infinite;white-space:nowrap;}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
+.ticker-item::before{content:'⚡ ';}
+
+/* ── MODULES PAGE ── */
+.mods-page{padding:3rem 2rem;max-width:1100px;margin:0 auto;}
+.mods-page-title{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:.5rem;}
+.mods-page-sub{color:var(--muted);font-size:15px;font-weight:600;margin-bottom:2rem;line-height:1.6;max-width:600px;}
+.mods-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem;}
+.module-card{background:var(--card);border:2px solid var(--border);border-radius:var(--r);padding:1.6rem;cursor:pointer;transition:all .25s;position:relative;}
+.module-card:hover:not(.locked){transform:translateY(-3px);box-shadow:var(--sh);border-color:var(--pm);}
+.module-card.locked{opacity:.6;cursor:not-allowed;filter:grayscale(.3);}
+.module-card.unlocked{border-color:var(--purple);}
+.module-card.done{border-color:#16A34A;}
+.mc-ribbon{position:absolute;top:1rem;right:1rem;font-size:18px;}
+.mc-cat{font-size:10px;font-weight:800;letter-spacing:.1em;color:var(--purple);margin-bottom:.35rem;text-transform:uppercase;}
+.mc-title{font-size:17px;font-weight:900;margin-bottom:.4rem;}
+.mc-desc{font-size:13px;color:var(--muted);font-weight:600;line-height:1.55;margin-bottom:.9rem;}
+.mc-tags{display:flex;gap:.4rem;flex-wrap:wrap;}
+.mc-tag{font-size:11px;font-weight:800;padding:3px 9px;border-radius:50px;background:var(--pl);color:var(--purple);}
+.mc-tag.green{background:#DCFCE7;color:#16A34A;}
+.mc-tag.yellow{background:var(--yl);color:var(--yellow);}
+.mc-tag.gray{background:#F3F4F6;color:var(--muted);}
+.lock-notice{margin-top:.9rem;font-size:12px;font-weight:800;color:var(--muted);background:#F3F4F6;padding:6px 12px;border-radius:8px;display:inline-block;}
+
+/* ── LEARN MODAL ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:none;align-items:flex-start;justify-content:center;padding:1rem;overflow-y:auto;}
+.overlay.open{display:flex;}
+.learn-box{background:var(--card);border-radius:var(--r);width:100%;max-width:780px;margin:auto;position:relative;overflow:hidden;}
+.learn-head{background:linear-gradient(135deg,#1E1B4B,#4C1D95);padding:2rem 2rem 1.5rem;color:#fff;position:relative;}
+.learn-head-close{position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,.15);border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:18px;color:#fff;display:flex;align-items:center;justify-content:center;}
+.lh-icon{font-size:2.8rem;margin-bottom:.5rem;}
+.lh-title{font-size:22px;font-weight:900;margin-bottom:.25rem;}
+.lh-meta{font-size:13px;color:#C4B5FD;font-weight:600;}
+/* tabs */
+.learn-tabs{display:flex;border-bottom:2px solid var(--border);padding:0 2rem;background:#fff;overflow-x:auto;}
+.ltab{font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:12px 18px;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s;}
+.ltab.active{color:var(--purple);border-bottom-color:var(--purple);}
+.learn-body{padding:2rem;}
+.lsec{display:none;}
+.lsec.active{display:block;}
+
+/* content styles inside modal */
+.content-prose{font-size:15px;font-weight:600;color:var(--muted);line-height:1.85;white-space:pre-wrap;}
+.content-prose strong{color:var(--text);}
+.highlight-box{background:var(--pl);border-left:4px solid var(--purple);border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:14px;font-weight:700;color:var(--purple);line-height:1.6;}
+.fact-box{background:var(--tl);border-left:4px solid var(--teal);border-radius:0 12px 12px 0;padding:1rem 1.2rem;margin:1.2rem 0;font-size:14px;font-weight:700;color:var(--teal);line-height:1.6;}
+
+/* compare table inside modal */
+.cmp-table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14px;}
+.cmp-table th{padding:.7rem 1rem;font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.05em;}
+.cmp-table th:first-child{text-align:left;color:var(--muted);}
+.cmp-table th.teal{background:var(--tl);color:var(--teal);border-radius:12px 12px 0 0;}
+.cmp-table th.purple{background:var(--pl);color:var(--purple);border-radius:12px 12px 0 0;}
+.cmp-table td{padding:.75rem 1rem;border-bottom:1.5px solid var(--border);}
+.cmp-table td:first-child{font-weight:800;color:var(--text);font-size:13px;}
+.cmp-table td.teal-val{color:var(--teal);font-weight:700;background:#F0FDFA;}
+.cmp-table td.purple-val{color:var(--purple);font-weight:700;background:#FAF5FF;}
+.cmp-table tr:last-child td{border-bottom:none;}
+
+/* timeline */
+.timeline{display:grid;gap:.9rem;margin:1.2rem 0;}
+.tl-item{display:flex;gap:1rem;align-items:flex-start;background:var(--bg);border-radius:14px;padding:1rem;border:2px solid var(--border);cursor:pointer;transition:all .2s;}
+.tl-item:hover{border-color:var(--purple);}
+.tl-item.open{border-color:var(--purple);}
+.tl-num{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;flex-shrink:0;}
+.tl-body{}
+.tl-title{font-size:15px;font-weight:900;margin-bottom:.2rem;}
+.tl-desc{font-size:13px;color:var(--muted);font-weight:600;line-height:1.55;}
+.tl-extra{display:none;margin-top:.6rem;font-size:13px;font-weight:700;padding:.75rem 1rem;border-radius:10px;line-height:1.55;}
+.tl-item.open .tl-extra{display:block;}
+
+/* analogy cards */
+.analogy-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.2rem 0;}
+.an-card{border-radius:14px;padding:1.1rem;border:2px solid var(--border);background:var(--card);cursor:pointer;transition:all .2s;height:150px;perspective:800px;}
+.an-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s;}
+.an-card.flipped .an-inner{transform:rotateY(180deg);}
+.an-front,.an-back{position:absolute;inset:0;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.9rem;text-align:center;border-radius:12px;}
+.an-front{background:var(--bg);}
+.an-back{background:var(--pl);transform:rotateY(180deg);}
+.an-icon{font-size:1.9rem;margin-bottom:.4rem;}
+.an-label{font-size:13px;font-weight:800;color:var(--muted);}
+.an-hint{font-size:11px;color:var(--purple);font-weight:700;margin-top:3px;}
+.an-text{font-size:12px;font-weight:700;color:var(--purple);line-height:1.5;}
+
+/* quiz inside module */
+.mod-quiz{margin-top:1.2rem;}
+.mq-progress{display:flex;gap:5px;margin-bottom:1.5rem;}
+.mq-dot{height:7px;border-radius:50px;background:var(--border);flex:1;transition:background .3s;}
+.mq-dot.done{background:var(--purple);}
+.mq-dot.curr{background:var(--pm);}
+.mq-q{font-size:17px;font-weight:900;margin-bottom:.4rem;line-height:1.35;}
+.mq-hint{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:1.4rem;}
+.mq-opts{display:grid;gap:8px;}
+.mq-opt{font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;padding:12px 18px;border-radius:13px;border:2px solid var(--border);background:#fff;text-align:left;cursor:pointer;transition:all .2s;}
+.mq-opt:hover:not(:disabled){border-color:var(--purple);background:var(--pl);color:var(--purple);}
+.mq-opt.correct{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mq-opt.wrong{border-color:#EF4444;background:#FEF2F2;color:#DC2626;}
+.mq-opt:disabled{cursor:default;}
+.mq-fb{margin-top:1rem;padding:11px 15px;border-radius:12px;font-size:13px;font-weight:700;display:none;line-height:1.5;}
+.mq-fb.show{display:block;}
+.mq-fb.c{background:var(--tl);color:var(--teal);border:1.5px solid #99F6E4;}
+.mq-fb.w{background:#FEF2F2;color:#DC2626;border:1.5px solid #FECACA;}
+.mq-next{margin-top:1.2rem;width:100%;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;padding:13px;border-radius:13px;background:var(--purple);color:#fff;border:none;cursor:pointer;display:none;transition:all .2s;}
+.mq-next.show{display:block;}
+.mq-score{text-align:center;display:none;padding:1rem 0;}
+.mq-score.show{display:block;}
+.mqs-emoji{font-size:4rem;margin-bottom:.8rem;}
+.mqs-num{font-size:2.5rem;font-weight:900;color:var(--purple);}
+.mqs-msg{font-size:16px;font-weight:700;color:var(--muted);margin-bottom:1.2rem;}
+.mq-restart{font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;padding:10px 24px;border-radius:50px;background:var(--purple);color:#fff;border:none;cursor:pointer;margin-right:.6rem;}
+.complete-section{background:linear-gradient(135deg,var(--pl),#FDF4FF);border-radius:var(--r);padding:1.5rem;text-align:center;margin-top:1.5rem;border:2px solid #DDD6FE;}
+.cs-title{font-size:18px;font-weight:900;color:var(--purple);margin-bottom:.4rem;}
+.cs-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:1rem;}
+
+/* xp toast */
+.xp-toast{position:fixed;bottom:2rem;right:2rem;background:var(--yl);border:2px solid #FDE68A;color:var(--yellow);font-size:14px;font-weight:800;padding:12px 22px;border-radius:50px;z-index:9999;transform:translateY(120px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 32px rgba(217,119,6,.2);}
+.xp-toast.show{transform:translateY(0);opacity:1;}
+
+/* progress */
+.prog-box{max-width:460px;margin:0 auto 2rem;background:#fff;border-radius:16px;padding:1.2rem 1.4rem;border:2px solid var(--pl);box-shadow:var(--sh);}
+.prog-label{display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:7px;}
+.prog-bar-wrap{height:11px;background:var(--pl);border-radius:50px;overflow:hidden;}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--pink));border-radius:50px;transition:width .6s ease;width:0%;}
+.medals-row{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap;}
+.medal{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;background:#fff;transition:all .3s;}
+.medal.earned{border-color:var(--yellow);background:var(--yl);}
+
+/* leaderboard */
+.lb-box{background:linear-gradient(135deg,var(--yl),#fff);border:2px solid #FDE68A;border-radius:var(--r);padding:1.5rem;max-width:440px;margin:0 auto;}
+.lb-row{display:flex;align-items:center;gap:.9rem;padding:.6rem;border-radius:12px;transition:background .2s;}
+.lb-row:hover{background:var(--yl);}
+.lb-rank{font-size:19px;width:32px;text-align:center;flex-shrink:0;}
+.lb-name{font-size:14px;font-weight:800;flex:1;}
+.lb-score{font-size:13px;font-weight:800;color:var(--yellow);background:var(--yl);padding:3px 11px;border-radius:50px;}
+.lb-you{background:var(--pl)!important;}
+.lb-you .lb-name{color:var(--purple);}
+.lb-you .lb-score{color:var(--purple);background:var(--pl);border:1.5px solid var(--pm);}
+
+/* glossary page */
+.gloss-list{display:grid;gap:8px;}
+.gloss-item{background:var(--card);border-radius:13px;border:2px solid var(--border);cursor:pointer;overflow:hidden;transition:border-color .2s;}
+.gloss-item:hover,.gloss-item.open{border-color:var(--purple);}
+.gloss-trigger{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.1rem;font-size:14px;font-weight:800;}
+.gloss-arrow{font-size:16px;transition:transform .25s;color:var(--purple);}
+.gloss-item.open .gloss-arrow{transform:rotate(180deg);}
+.gloss-body{font-size:13px;font-weight:600;color:var(--muted);padding:0 1.1rem;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .2s;line-height:1.65;}
+.gloss-item.open .gloss-body{max-height:300px;padding-bottom:.9rem;}
+
+/* fade in */
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+
+footer{text-align:center;padding:2.5rem 2rem;border-top:2px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;}
+footer strong{color:var(--purple);}
+
+@media(max-width:640px){
+  nav{padding:0 1rem;}
+  .nav-links button{padding:6px 10px;font-size:12px;}
+  .hero{padding:3rem 1.5rem 2rem;}
+  .xp-pill{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">🤖 AI Academy</span>
+  <div class="nav-links">
+    <button onclick="showPage('home')" id="nav-home" class="active">Home</button>
+    <button onclick="showPage('modules')" id="nav-modules">Modules</button>
+    <button onclick="showPage('glossary')" id="nav-glossary">Glossary</button>
+    <button onclick="showPage('leaderboard')" id="nav-leaderboard">Leaderboard</button>
+  </div>
+  <div class="xp-pill">⭐ <span id="navXp">0</span> XP</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════ HOME PAGE ═══ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-badge">✨ Learn AI · Earn XP · All Ages Welcome</div>
+    <h1>Welcome to the<br><span class="hl">AI Adventure Academy</span> 🚀</h1>
+    <p class="hero-sub">Your step-by-step guide to understanding Artificial Intelligence — from what it is, to how ChatGPT and Claude were built differently. Interactive, fun, and designed for every age group.</p>
+    <div class="hero-btns">
+      <button class="btn btn-p" onclick="showPage('modules')">Browse Modules 📚</button>
+      <button class="btn btn-s" onclick="showPage('glossary')">Jargon Buster 📖</button>
+    </div>
+    <div class="prog-box">
+      <div class="prog-label"><span>🏆 Your Progress</span><span id="homeProgText">0 / 1 modules unlocked · 0 XP</span></div>
+      <div class="prog-bar-wrap"><div class="prog-bar-fill" id="homeProgFill"></div></div>
+      <div class="medals-row" id="homeMedals"></div>
+    </div>
+    <div class="mascots">
+      <div class="mascot"><div class="m-face gpt-f">🤖</div><div class="m-name hl2">ChatGPT</div><div class="m-tag">Made by OpenAI</div></div>
+      <div class="mascot"><div class="m-face cla-f">🧠</div><div class="m-name hl">Claude</div><div class="m-tag">Made by Anthropic</div></div>
+    </div>
+  </div>
+
+  <!-- Ticker -->
+  <div class="ticker-wrap"><div class="ticker" id="tickerEl"></div></div>
+
+  <!-- What you'll learn -->
+  <section class="section fade-in">
+    <div class="sec-t">📋 What You'll Learn</div>
+    <p class="sec-s">This academy covers everything from the basics of AI to deep technical comparisons — presented in a way that's fun for everyone.</p>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-icon">🧠</div><div class="feat-title">What is an LLM?</div><div class="feat-body">Understand how Large Language Models work — the technology behind ChatGPT and Claude — explained with simple analogies for any age.</div></div>
+      <div class="feat-card"><div class="feat-icon">⚔️</div><div class="feat-title">ChatGPT vs Claude</div><div class="feat-body">Compare the two most popular AI assistants side by side — who made them, how they work, what makes them different, and when to use each.</div></div>
+      <div class="feat-card"><div class="feat-icon">🏋️</div><div class="feat-title">How AI Gets Trained</div><div class="feat-body">Discover the two very different methods used to train these AIs — RLHF (ChatGPT) vs Constitutional AI (Claude) — explained step by step.</div></div>
+      <div class="feat-card"><div class="feat-icon">⚖️</div><div class="feat-title">AI Ethics & Safety</div><div class="feat-body">Explore the big questions: What values should AI have? What is "hallucination"? Why does safety matter? Coming soon as a full module.</div></div>
+      <div class="feat-card"><div class="feat-icon">🎯</div><div class="feat-title">Interactive Quizzes</div><div class="feat-body">Test your knowledge after every module with built-in quizzes. Earn XP for every correct answer and track your progress on the leaderboard.</div></div>
+      <div class="feat-card"><div class="feat-icon">🌈</div><div class="feat-title">Fun for All Ages</div><div class="feat-body">Each module is tagged by age/difficulty — from a Kids edition with super-simple language, to advanced deep dives for technical learners.</div></div>
+    </div>
+  </section>
+
+  <!-- Module Preview Strip -->
+  <div class="mod-preview fade-in">
+    <div class="mod-preview-inner">
+      <div class="sec-t">📚 Upcoming Modules</div>
+      <p class="sec-s">One module is live now. More are being added soon — check back regularly!</p>
+      <div class="preview-strip" id="previewStrip"></div>
+      <div style="text-align:center;margin-top:1.8rem">
+        <button class="btn btn-p" onclick="showPage('modules')">See All Modules →</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Made with ❤️ — <strong>AI Adventure Academy</strong></p>
+    <p style="margin-top:.4rem;font-size:12px">Try both AIs free at <strong>claude.ai</strong> and <strong>chat.openai.com</strong></p>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════════ MODULES PAGE ═══ -->
+<div class="page" id="page-modules">
+  <div class="mods-page">
+    <div class="mods-page-title">📚 All Modules</div>
+    <p class="mods-page-sub">Work through each module at your own pace. Modules unlock as new content is published. Complete a module to earn XP and achievements!</p>
+    <div class="mods-grid" id="modsGrid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ GLOSSARY PAGE ═══ -->
+<div class="page" id="page-glossary">
+  <div class="section">
+    <div class="sec-t">📖 Jargon Buster</div>
+    <p class="sec-s">All the weird AI words explained simply. Click any term to expand — earn +5 XP each time!</p>
+    <div class="gloss-list" id="glossList"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ LEADERBOARD PAGE ═══ -->
+<div class="page" id="page-leaderboard">
+  <div class="section">
+    <div class="sec-t">🏆 Hall of Fame</div>
+    <p class="sec-s">Keep earning XP to climb the leaderboard. Complete modules, answer quizzes, and unlock glossary terms!</p>
+    <div class="lb-box" style="margin-bottom:2rem"><div style="font-size:16px;font-weight:900;margin-bottom:1rem;text-align:center">🌟 Leaderboard</div><div id="lbRows"></div></div>
+    <div style="max-width:440px;margin:0 auto">
+      <div style="font-size:16px;font-weight:900;margin-bottom:1rem">🎖️ Achievements</div>
+      <div id="achieveList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ LEARN MODAL ═══ -->
+<div class="overlay" id="learnOverlay">
+  <div class="learn-box">
+    <div class="learn-head">
+      <button class="learn-head-close" onclick="closeLearn()">✕</button>
+      <div class="lh-icon" id="lhIcon"></div>
+      <div class="lh-title" id="lhTitle"></div>
+      <div class="lh-meta" id="lhMeta"></div>
+    </div>
+    <div class="learn-tabs" id="learnTabs"></div>
+    <div class="learn-body" id="learnBody"></div>
+  </div>
+</div>
+
+<div class="xp-toast" id="xpToast">⭐ +<span id="xpAmt">0</span> XP!</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  STATE (all in-memory)
+// ══════════════════════════════════════════════════
+var S = {
+  xp: 0,
+  completed: [],
+  medals: [],
+  openedGloss: [],
+  flipped: [],
+  // quiz state per module
+  qState: {}
+};
+
+var MEDALS_DEF = [
+  {id:'first',   emoji:'🥇', name:'First Module Complete!', xp:20},
+  {id:'quiz_ace',emoji:'🏆', name:'Quiz Ace — Perfect Score!', xp:30},
+  {id:'flip_all',emoji:'🃏', name:'Flip Master — All Cards!', xp:15},
+  {id:'gloss5',  emoji:'📖', name:'Word Nerd — 5 Terms!', xp:15}
+];
+
+// ══════════════════════════════════════════════════
+//  MODULE DEFINITIONS
+//  ─────────────────────────────────────────────────
+//  HOW TO ADD A NEW MODULE IN FUTURE:
+//  1. Copy the template object below into the MODULES array
+//  2. Set  locked: false  to make it visible immediately
+//  3. Fill in the tabs array with your content sections
+//  4. Each tab can be: type 'content', 'compare', 'timeline', 'analogies', or 'quiz'
+// ══════════════════════════════════════════════════
+var MODULES = [
+
+  // ─── MODULE 1: UNLOCKED ───────────────────────────────────────────────────
+  {
+    id: 'mod_claude_vs_gpt',
+    icon: '⚔️',
+    title: 'ChatGPT vs Claude',
+    desc: 'A deep-dive comparison of the two most popular AI assistants — who built them, how they work, and what makes them different.',
+    level: 'All Ages 🌈',
+    category: 'AI Basics',
+    xpReward: 80,
+    locked: false,
+    tabs: [
+      {
+        id: 'intro', label: '📖 Introduction',
+        type: 'content',
+        content: [
+          {type:'text', text:'ChatGPT and Claude are the two most widely used AI assistants in the world — but they were built by different teams, with completely different philosophies about what AI should be.\n\nIn this module, you\'ll learn exactly what makes them similar, what makes them different, and how to decide which one to use for different tasks.'},
+          {type:'highlight', text:'🤖 ChatGPT is made by OpenAI (founded 2015), a company that started as a non-profit and became one of the most valuable AI companies in the world.\n🧠 Claude is made by Anthropic (founded 2021), a company started by ex-OpenAI researchers who wanted to focus specifically on AI safety.'},
+          {type:'text', text:'Both are what\'s called "Large Language Models" — AI systems trained on billions of sentences of text, that can understand and generate human language. Think of them as incredibly powerful autocomplete — your phone suggests the next word when you type; these AIs can write entire essays, explain complex topics, and hold long conversations.\n\nBut under the hood, they were trained very differently — and that changes how they behave.'},
+          {type:'fact', text:'💡 Fun fact: Anthropic was founded by Dario Amodei, Daniela Amodei, and several other researchers who previously worked at OpenAI — so in a way, Claude is a sibling of ChatGPT!'}
+        ]
+      },
+      {
+        id: 'compare', label: '📊 Side by Side',
+        type: 'compare',
+        rows: [
+          {label:'Made by',     gpt:'OpenAI (2015)',           claude:'Anthropic (2021)',       tip:'OpenAI started as a non-profit in 2015. Anthropic split off in 2021 by ex-OpenAI researchers focused on safety.'},
+          {label:'Framework',   gpt:'PyTorch (by Meta)',       claude:'JAX (by Google)',        tip:'PyTorch is flexible and popular, runs on NVIDIA GPUs. JAX is faster and more precise, runs on Google\'s TPUs.'},
+          {label:'Training',    gpt:'RLHF',                    claude:'Constitutional AI',      tip:'RLHF = human raters rank responses. Constitutional AI = Claude learns from a written set of principles and critiques its own outputs.'},
+          {label:'Honesty',     gpt:'More agreeable',          claude:'Prioritises truth',      tip:'RLHF can make models sycophantic — agreeable even when wrong. Claude\'s constitution explicitly prioritises honesty over agreeableness.'},
+          {label:'Context',     gpt:'128K–200K tokens',        claude:'200K tokens',            tip:'200K tokens ≈ 150,000 words — enough to read an entire novel! Great for processing long documents.'},
+          {label:'Images',      gpt:'Generates (DALL-E) ✅',   claude:'Analyses only ✗',        tip:'ChatGPT can create images via DALL-E. Claude can look at images you upload and describe them, but cannot create new ones.'},
+          {label:'Voice',       gpt:'Full voice mode ✅',      claude:'Limited 🟡',             tip:'ChatGPT Plus has real-time voice conversation. Claude has some voice features but they\'re more limited.'},
+          {label:'Reasoning',   gpt:'o1 / o3 models',         claude:'Extended Thinking',      tip:'Both have a "think slowly" mode for hard problems. OpenAI has o1/o3. Claude\'s Extended Thinking shows you its reasoning chain.'},
+          {label:'Specialty',   gpt:'Versatile & creative',   claude:'Long docs & safety',     tip:'ChatGPT tends to excel at creative tasks and has more integrations. Claude tends to excel at careful analysis of long documents.'}
+        ]
+      },
+      {
+        id: 'training', label: '🏋️ Training Methods',
+        type: 'timeline',
+        intro: 'How you train an AI has a massive impact on how it behaves. ChatGPT and Claude use two very different approaches:',
+        sections: [
+          {
+            title: '🤖 ChatGPT — RLHF (Reinforcement Learning from Human Feedback)',
+            color: '#CCFBF1', textColor: '#0D9488',
+            steps: [
+              {n:'1', bg:'#EDE9FE', col:'#7C3AED', title:'Pre-training: Read everything', desc:'The model reads billions of sentences from books, websites, and Wikipedia.', detail:'Like a child reading every book in a library without guidance. It learns language patterns and facts — but has no sense of "good" vs "bad" yet. This produces a raw model that\'s knowledgeable but unpredictable.'},
+              {n:'2', bg:'#CCFBF1', col:'#0D9488', title:'Supervised fine-tuning', desc:'Human trainers write ideal example conversations for the model to learn from.', detail:'OpenAI hired people to write both the question AND the ideal answer. The model studies these examples and learns to imitate a helpful, polite assistant — like an employee shadowing an expert manager.'},
+              {n:'3', bg:'#FFF7ED', col:'#EA580C', title:'Build a Reward Model (judge)', desc:'Human raters compare different AI responses and rank which is best.', detail:'For each question, the AI generates multiple responses. Human raters rank them best-to-worst. These rankings train a separate "Reward Model" AI that learns what a good response looks like — like a cooking competition judge who learns over thousands of dishes.'},
+              {n:'4', bg:'#FCE7F3', col:'#DB2777', title:'Reinforcement Learning', desc:'The AI keeps tweaking itself to score higher from the Reward Model.', detail:'Like training a dog with treats — every time the AI gives a response the Reward Model rates highly, it reinforces that behaviour. Over millions of examples, the AI learns to consistently produce well-rated responses. The risk: if the Reward Model is biased (e.g., toward agreeable-sounding answers), the AI learns that too.'}
+            ]
+          },
+          {
+            title: '🧠 Claude — Constitutional AI (CAI)',
+            color: '#EDE9FE', textColor: '#7C3AED',
+            steps: [
+              {n:'1', bg:'#EDE9FE', col:'#7C3AED', title:'Write the Constitution', desc:'Anthropic wrote a document of core values the AI must follow.', detail:'The Constitution draws on the UN Declaration of Human Rights, Apple\'s Terms of Service, and AI safety research. It says things like: "be honest," "avoid harmful content," "don\'t claim to be human," "treat all people with dignity."'},
+              {n:'2', bg:'#CCFBF1', col:'#0D9488', title:'Red-teaming & self-critique', desc:'Claude is given tricky, harmful prompts and then asked to critique its own answer using the Constitution.', detail:'Anthropic wrote "red-team" questions designed to get the AI to say bad things. Claude answers, then is asked: "Does this violate any of these principles?" and rewrites its response. Like arguing the other side of a debate — Claude learns to catch its own mistakes.'},
+              {n:'3', bg:'#FFF7ED', col:'#EA580C', title:'RLAIF — AI gives feedback', desc:'A helper AI trained on the Constitution scores Claude\'s responses instead of human raters.', detail:'Instead of needing thousands of human raters (expensive and slow), a Preference Model AI is trained on Constitutional principles and rates responses at massive scale — like going from 1 teacher to 1,000 AI teaching assistants grading essays automatically.'},
+              {n:'4', bg:'#FCE7F3', col:'#DB2777', title:'Constitutional reinforcement', desc:'Claude trains to maximise its Constitutional scores, not just user satisfaction.', detail:'The key difference from RLHF: Claude isn\'t trained to please random people. It\'s trained to maximise alignment with a specific set of written values. The result: an AI that will tell you when your idea has a flaw, even if you don\'t want to hear it.'}
+            ]
+          }
+        ]
+      },
+      {
+        id: 'analogies', label: '💡 Analogies',
+        type: 'analogies',
+        intro: 'Tap each card to flip it and reveal the AI connection!',
+        cards: [
+          {icon:'🎮', label:'Autocomplete on steroids', text:'Your phone suggests "pizza" after "I want to eat..." — AI does the same but can write entire essays, answer deep questions, and hold hour-long conversations!'},
+          {icon:'🧱', label:'LEGO vs Formula 1', text:'PyTorch (ChatGPT) = LEGO Technic — flexible, popular, built for many projects. JAX (Claude) = F1 car kit — harder to work with but blazing fast on special Google chips (TPUs).'},
+          {icon:'🎓', label:'Two types of teachers', text:'ChatGPT learned from human raters giving "gold stars" to good responses. Claude learned from a written rulebook and had to check its own work — like a student with a very detailed marking rubric.'},
+          {icon:'🐕', label:'Training with treats', text:'RLHF is like dog training — give treats for good behaviour. But if treats are given for looking cute, not being useful, the dog learns to look cute. Claude\'s Constitution trains for actual values, not just pleasing the trainer.'},
+          {icon:'📜', label:'The Constitution analogy', text:'Just as a country\'s constitution sets rules every citizen must follow, Claude\'s "Constitution" sets rules every response must follow — even when it\'s inconvenient or when users push back.'},
+          {icon:'🎭', label:'Honest friend vs people-pleaser', text:'ChatGPT can be like a friend who always agrees with you (sycophancy risk). Claude is designed to be more like a brilliant friend who tells you when your plan has a flaw — even if it\'s not what you want to hear.'}
+        ]
+      },
+      {
+        id: 'quiz', label: '🎯 Quiz',
+        type: 'quiz',
+        questions: [
+          {q:'Which company made Claude?',hint:'It was founded by ex-OpenAI researchers in 2021...',opts:['OpenAI','Google','Anthropic','Meta'],answer:2,exp:'✅ Anthropic made Claude! Founded in 2021 by Dario Amodei, Daniela Amodei, and others who previously worked at OpenAI.'},
+          {q:'What does RLHF stand for?',hint:'Think: what kind of learning, from what kind of feedback?',opts:['Rapid Learning from Human Features','Reinforcement Learning from Human Feedback','Real-time Learning for Humans First','Ranking Language from Human Filtering'],answer:1,exp:'✅ Reinforcement Learning from Human Feedback! Human raters rank AI responses, and the model reinforces the behaviour that scores highest.'},
+          {q:'What is "Constitutional AI"?',hint:'Think: what document guides Claude\'s behaviour?',opts:['Training on legal documents','Using robots to write code','Training with a written set of principles the AI must follow','A secret algorithm from Google'],answer:2,exp:'✅ Constitutional AI! Anthropic wrote a "Constitution" of values (honesty, harmlessness, etc.) and Claude learns to critique and rewrite its own responses to align with those principles.'},
+          {q:'What is "sycophancy" in AI?',hint:'Think: what happens when the AI is TOO agreeable?',opts:['When AI refuses to answer','When AI tells you what you want to hear, not the truth','When AI responds too slowly','When AI uses overly technical language'],answer:1,exp:'✅ Sycophancy is when AI agrees with you even when you\'re wrong! RLHF can cause this because human raters often reward agreeable-sounding answers. Claude\'s constitution explicitly trains against it.'},
+          {q:'What framework did Anthropic use to build Claude?',hint:'It was created by Google and is very fast on TPU chips...',opts:['PyTorch','TensorFlow','JAX','Keras'],answer:2,exp:'✅ JAX — created by Google! It\'s designed to run fast on Google\'s TPU chips. ChatGPT uses PyTorch, made by Meta, running on NVIDIA GPUs.'},
+          {q:'What is Claude\'s context window?',hint:'It\'s large enough to read a whole novel!',opts:['10,000 tokens','50,000 tokens','100,000 tokens','200,000 tokens'],answer:3,exp:'✅ 200,000 tokens — roughly 150,000 words! That\'s enough to read an entire novel or a stack of legal documents in one go.'},
+          {q:'Which AI has built-in image generation?',hint:'One of them has DALL-E built in...',opts:['Claude','ChatGPT','Both','Neither'],answer:1,exp:'✅ ChatGPT has DALL-E image generation built in. Claude can analyse images you upload, but cannot generate new images.'},
+          {q:'Why might RLHF produce sycophantic AI?',hint:'Think about what human raters tend to prefer...',opts:['Because RLHF uses too much data','Because human raters often reward agreeable-sounding responses even when incorrect','Because RLHF doesn\'t use enough training steps','Because it runs on GPUs instead of TPUs'],answer:1,exp:'✅ Human raters tend to prefer responses that sound confident and agreeable — even when they\'re factually incorrect. RLHF can learn to optimise for "sounds good" rather than "is true."'}
+        ]
+      }
+    ]
+  },
+
+  // ─── LOCKED MODULES (coming soon) ─────────────────────────────────────────
+  {id:'mod_llm_basics',  icon:'🧠', title:'What is an LLM?',         desc:'Discover how Large Language Models work — from transformers to tokens, explained simply for all ages.',       level:'All Ages 🌈',       category:'AI Basics', xpReward:60, locked:true, comingSoon:'Coming Soon'},
+  {id:'mod_training',    icon:'🏋️', title:'How AI Gets Trained',     desc:'A deep dive into RLHF and Constitutional AI — the two methods that shaped ChatGPT and Claude.',                 level:'Intermediate ⚡',   category:'Deep Dive',  xpReward:70, locked:true, comingSoon:'Coming Soon'},
+  {id:'mod_ethics',      icon:'⚖️', title:'AI Ethics & Safety',      desc:'Why does AI safety matter? What is hallucination? Who decides what values AI should have?',                      level:'Teens (11-17) 🧑',  category:'Ethics',     xpReward:65, locked:true, comingSoon:'Coming Soon'},
+  {id:'mod_kids',        icon:'🌈', title:'AI for Kids!',             desc:'Super-simple, super-fun explanations of AI — designed for curious minds aged 6 and up.',                         level:'Kids (6-10) 🧒',    category:'AI Basics',  xpReward:30, locked:true, comingSoon:'Coming Soon'},
+  {id:'mod_future',      icon:'🔮', title:'The Future of AI',         desc:'What\'s next for AI? From AGI to multimodal models — a look at where things are heading.',                       level:'Advanced 🔥',       category:'Deep Dive',  xpReward:80, locked:true, comingSoon:'Coming Soon'}
+];
+
+// ══════════════════════════════════════════════════
+//  XP + MEDALS
+// ══════════════════════════════════════════════════
+function addXP(amt, label) {
+  S.xp += amt;
+  var el = document.getElementById('navXp');
+  if (el) el.textContent = S.xp;
+  var t = document.getElementById('xpToast');
+  var a = document.getElementById('xpAmt');
+  if (t && a) {
+    a.textContent = amt + (label ? ' — ' + label : '');
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function(){ t.classList.remove('show'); }, 2500);
+  }
+  updateProgress();
+}
+
+function awardMedal(id) {
+  if (S.medals.indexOf(id) !== -1) return;
+  S.medals.push(id);
+  var m = MEDALS_DEF.filter(function(x){ return x.id === id; })[0];
+  if (m) addXP(m.xp, m.emoji + ' ' + m.name);
+  renderMedals();
+  renderAchievements();
+}
+
+function renderMedals() {
+  var row = document.getElementById('homeMedals');
+  if (!row) return;
+  row.innerHTML = MEDALS_DEF.map(function(m){
+    var e = S.medals.indexOf(m.id) !== -1;
+    return '<div class="medal'+(e?' earned':'')+'" title="'+m.name+'">'+m.emoji+'</div>';
+  }).join('');
+}
+
+function renderAchievements() {
+  var el = document.getElementById('achieveList');
+  if (!el) return;
+  el.innerHTML = MEDALS_DEF.map(function(m){
+    var e = S.medals.indexOf(m.id) !== -1;
+    return '<div style="display:flex;align-items:center;gap:.9rem;padding:.75rem;border-radius:13px;border:2px solid '+(e?'#FDE68A':'var(--border)')+';background:'+(e?'var(--yl)':'#fff')+';margin-bottom:.6rem;">'+
+      '<div style="font-size:1.8rem">'+m.emoji+'</div>'+
+      '<div><div style="font-size:14px;font-weight:900;color:'+(e?'var(--yellow)':'var(--muted)')+'">'+m.name+'</div>'+
+      '<div style="font-size:12px;font-weight:700;color:var(--muted)">+'+(e?m.xp+' XP earned':'???')+' XP</div></div>'+
+      '<div style="margin-left:auto;font-size:13px;font-weight:800;color:'+(e?'var(--teal)':'var(--muted)')+'">'+( e? '✅ Earned' : '🔒 Locked')+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+function updateProgress() {
+  var total = MODULES.filter(function(m){ return !m.locked; }).length;
+  var done = 0;
+  MODULES.forEach(function(m){ if (S.completed.indexOf(m.id) !== -1) done++; });
+  var pct = total ? Math.round(done/total*100) : 0;
+  var fill = document.getElementById('homeProgFill');
+  var txt = document.getElementById('homeProgText');
+  if (fill) fill.style.width = pct + '%';
+  if (txt) txt.textContent = done + ' / ' + total + ' modules complete · ' + S.xp + ' XP';
+  var xpEl = document.getElementById('navXp');
+  if (xpEl) xpEl.textContent = S.xp;
+  renderLeaderboard();
+}
+
+// ══════════════════════════════════════════════════
+//  PAGE NAVIGATION
+// ══════════════════════════════════════════════════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.nav-links button').forEach(function(b){ b.classList.remove('active'); });
+  var pg = document.getElementById('page-' + name);
+  var btn = document.getElementById('nav-' + name);
+  if (pg) pg.classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════════════
+//  MODULE GRID (Modules Page)
+// ══════════════════════════════════════════════════
+function renderModulesGrid() {
+  var grid = document.getElementById('modsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  MODULES.forEach(function(mod) {
+    var done = S.completed.indexOf(mod.id) !== -1;
+    var div = document.createElement('div');
+    div.className = 'module-card' + (mod.locked ? ' locked' : ' unlocked') + (done ? ' done' : '');
+    div.innerHTML =
+      '<div class="mc-ribbon">' + (done ? '✅' : mod.locked ? '🔒' : '🟢') + '</div>' +
+      '<div class="mc-cat">' + mod.category + '</div>' +
+      '<div class="mc-title">' + mod.icon + ' ' + mod.title + '</div>' +
+      '<div class="mc-desc">' + mod.desc + '</div>' +
+      '<div class="mc-tags">' +
+        '<span class="mc-tag">' + mod.level + '</span>' +
+        '<span class="mc-tag yellow">⭐ ' + mod.xpReward + ' XP</span>' +
+        (done ? '<span class="mc-tag green">✅ Complete</span>' : '') +
+        (mod.locked ? '<span class="mc-tag gray">🔒 Locked</span>' : '<span class="mc-tag green">🟢 Available</span>') +
+      '</div>' +
+      (mod.locked ? '<div class="lock-notice">🔒 ' + (mod.comingSoon || 'Coming soon') + ' — check back later!</div>' : '');
+    if (!mod.locked) {
+      div.addEventListener('click', function(){ openLearn(mod.id); });
+    }
+    grid.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  PREVIEW STRIP (Home Page)
+// ══════════════════════════════════════════════════
+function renderPreviewStrip() {
+  var strip = document.getElementById('previewStrip');
+  if (!strip) return;
+  MODULES.forEach(function(mod) {
+    var div = document.createElement('div');
+    div.className = 'preview-card' + (mod.locked ? ' locked-c' : '');
+    div.innerHTML =
+      '<div class="pc-icon">' + mod.icon + '</div>' +
+      '<div class="pc-title">' + mod.title + '</div>' +
+      '<div class="pc-tag">' + (mod.locked ? '🔒 Coming soon' : '🟢 Available now') + '</div>';
+    if (!mod.locked) div.addEventListener('click', function(){ showPage('modules'); openLearn(mod.id); });
+    strip.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  LEARN MODAL
+// ══════════════════════════════════════════════════
+var currentMod = null;
+var currentTab = 0;
+
+function openLearn(modId) {
+  var mod = MODULES.filter(function(m){ return m.id === modId; })[0];
+  if (!mod || mod.locked) return;
+  currentMod = mod;
+  currentTab = 0;
+  S.qState[modId] = S.qState[modId] || {idx:0, score:0, answered:false, done:false};
+
+  document.getElementById('lhIcon').textContent = mod.icon;
+  document.getElementById('lhTitle').textContent = mod.title;
+  document.getElementById('lhMeta').textContent = mod.level + ' · ' + mod.category + ' · ⭐ ' + mod.xpReward + ' XP';
+
+  // Build tabs
+  var tabs = document.getElementById('learnTabs');
+  tabs.innerHTML = mod.tabs.map(function(t, i){
+    return '<button class="ltab' + (i===0?' active':'') + '" onclick="switchTab('+i+')">'+t.label+'</button>';
+  }).join('');
+
+  renderTab(0);
+  document.getElementById('learnOverlay').classList.add('open');
+}
+
+function closeLearn() {
+  document.getElementById('learnOverlay').classList.remove('open');
+}
+
+function switchTab(idx) {
+  currentTab = idx;
+  document.querySelectorAll('.ltab').forEach(function(b,i){ b.classList.toggle('active', i===idx); });
+  renderTab(idx);
+}
+
+function renderTab(idx) {
+  var mod = currentMod;
+  var tab = mod.tabs[idx];
+  var body = document.getElementById('learnBody');
+  body.innerHTML = '';
+
+  if (tab.type === 'content') {
+    body.appendChild(buildContent(tab));
+  } else if (tab.type === 'compare') {
+    body.appendChild(buildCompare(tab));
+  } else if (tab.type === 'timeline') {
+    body.appendChild(buildTimeline(tab));
+  } else if (tab.type === 'analogies') {
+    body.appendChild(buildAnalogies(tab));
+  } else if (tab.type === 'quiz') {
+    body.appendChild(buildQuiz(tab, mod.id));
+  }
+
+  // Complete button on last tab
+  if (idx === mod.tabs.length - 1 && tab.type !== 'quiz') {
+    body.appendChild(buildCompleteSection(mod.id));
+  }
+}
+
+// ── Content builder ──
+function buildContent(tab) {
+  var div = document.createElement('div');
+  tab.content.forEach(function(c){
+    if (c.type === 'text') {
+      var p = document.createElement('div');
+      p.className = 'content-prose';
+      p.style.marginBottom = '1rem';
+      p.textContent = c.text;
+      div.appendChild(p);
+    } else if (c.type === 'highlight') {
+      var h = document.createElement('div');
+      h.className = 'highlight-box';
+      h.textContent = c.text;
+      div.appendChild(h);
+    } else if (c.type === 'fact') {
+      var f = document.createElement('div');
+      f.className = 'fact-box';
+      f.textContent = c.text;
+      div.appendChild(f);
+    }
+  });
+  div.appendChild(buildCompleteSection(currentMod.id, true));
+  return div;
+}
+
+// ── Compare table builder ──
+function buildCompare(tab) {
+  var div = document.createElement('div');
+  div.style.overflowX = 'auto';
+  var table = document.createElement('table');
+  table.className = 'cmp-table';
+  table.innerHTML =
+    '<thead><tr>'+
+    '<th></th>'+
+    '<th class="teal">🤖 ChatGPT</th>'+
+    '<th class="purple">🧠 Claude</th>'+
+    '</tr></thead><tbody>' +
+    tab.rows.map(function(r){
+      return '<tr>'+
+        '<td>'+r.label+'</td>'+
+        '<td class="teal-val">'+r.gpt+'</td>'+
+        '<td class="purple-val">'+r.claude+'</td>'+
+        '</tr>';
+    }).join('') + '</tbody>';
+  div.appendChild(table);
+  var note = document.createElement('p');
+  note.style.cssText = 'font-size:12px;color:var(--muted);font-weight:700;margin-top:.5rem;';
+  note.textContent = '💡 Click any row in the Battle section (Compare tab) for a deeper explanation of each difference.';
+  div.appendChild(note);
+  return div;
+}
+
+// ── Timeline / Steps builder ──
+function buildTimeline(tab) {
+  var div = document.createElement('div');
+  if (tab.intro) {
+    var intro = document.createElement('p');
+    intro.className = 'content-prose';
+    intro.style.marginBottom = '1.5rem';
+    intro.textContent = tab.intro;
+    div.appendChild(intro);
+  }
+  tab.sections.forEach(function(sec){
+    var h = document.createElement('div');
+    h.style.cssText = 'font-size:16px;font-weight:900;margin:1.5rem 0 .9rem;color:'+sec.textColor+';';
+    h.textContent = sec.title;
+    div.appendChild(h);
+    var tl = document.createElement('div');
+    tl.className = 'timeline';
+    sec.steps.forEach(function(s){
+      var item = document.createElement('div');
+      item.className = 'tl-item';
+      item.innerHTML =
+        '<div class="tl-num" style="background:'+s.bg+';color:'+s.col+'">'+s.n+'</div>'+
+        '<div class="tl-body">'+
+          '<div class="tl-title">'+s.title+'</div>'+
+          '<div class="tl-desc">'+s.desc+'</div>'+
+          '<div class="tl-extra" style="background:'+s.bg+';color:'+s.col+'">'+s.detail+'</div>'+
+        '</div>';
+      item.addEventListener('click', function(){
+        item.classList.toggle('open');
+        if (item.classList.contains('open')) addXP(3, 'Explored a step!');
+      });
+      tl.appendChild(item);
+    });
+    div.appendChild(tl);
+  });
+  return div;
+}
+
+// ── Analogy flip cards ──
+function buildAnalogies(tab) {
+  var div = document.createElement('div');
+  if (tab.intro) {
+    var intro = document.createElement('p');
+    intro.className = 'content-prose';
+    intro.style.marginBottom = '1.2rem';
+    intro.textContent = tab.intro;
+    div.appendChild(intro);
+  }
+  var grid = document.createElement('div');
+  grid.className = 'analogy-row';
+  tab.cards.forEach(function(c, i){
+    var card = document.createElement('div');
+    card.className = 'an-card';
+    card.innerHTML =
+      '<div class="an-inner">'+
+        '<div class="an-front">'+
+          '<div class="an-icon">'+c.icon+'</div>'+
+          '<div class="an-label">'+c.label+'</div>'+
+          '<div class="an-hint">Tap to flip →</div>'+
+        '</div>'+
+        '<div class="an-back">'+
+          '<div class="an-text">'+c.text+'</div>'+
+        '</div>'+
+      '</div>';
+    card.addEventListener('click', function(){
+      card.classList.toggle('flipped');
+      var key = (currentMod ? currentMod.id : '') + '_flip_' + i;
+      if (card.classList.contains('flipped') && S.flipped.indexOf(key) === -1) {
+        S.flipped.push(key);
+        addXP(5, 'Card flipped!');
+        if (S.flipped.length >= 6) awardMedal('flip_all');
+      }
+    });
+    grid.appendChild(card);
+  });
+  div.appendChild(grid);
+  return div;
+}
+
+// ── Quiz builder ──
+function buildQuiz(tab, modId) {
+  var qs = tab.questions;
+  var qs_state = S.qState[modId] || {idx:0, score:0, answered:false, done:false};
+  S.qState[modId] = qs_state;
+
+  var div = document.createElement('div');
+  div.className = 'mod-quiz';
+
+  if (qs_state.done) {
+    div.appendChild(buildQuizScore(qs_state, qs, modId));
+    return div;
+  }
+
+  // Dots
+  var dots = document.createElement('div');
+  dots.className = 'mq-progress';
+  dots.id = 'mqDots_' + modId;
+  dots.innerHTML = qs.map(function(_, i){
+    return '<div class="mq-dot'+(i<qs_state.idx?' done':i===qs_state.idx?' curr':'')+'"></div>';
+  }).join('');
+  div.appendChild(dots);
+
+  // Question
+  var q = qs[qs_state.idx];
+  var qt = document.createElement('div');
+  qt.className = 'mq-q';
+  qt.textContent = (qs_state.idx + 1) + '. ' + q.q;
+  div.appendChild(qt);
+
+  var hint = document.createElement('div');
+  hint.className = 'mq-hint';
+  hint.textContent = '💡 ' + q.hint;
+  div.appendChild(hint);
+
+  var opts = document.createElement('div');
+  opts.className = 'mq-opts';
+  q.opts.forEach(function(o, i){
+    var btn = document.createElement('button');
+    btn.className = 'mq-opt';
+    btn.textContent = String.fromCharCode(65+i) + '. ' + o;
+    btn.addEventListener('click', function(){
+      if (qs_state.answered) return;
+      qs_state.answered = true;
+      var correct = i === q.answer;
+      opts.querySelectorAll('.mq-opt').forEach(function(b, idx){
+        b.disabled = true;
+        if (idx === q.answer) b.classList.add('correct');
+        else if (idx === i) b.classList.add('wrong');
+      });
+      if (correct) { qs_state.score++; addXP(15, 'Correct!'); }
+      fb.className = 'mq-fb show ' + (correct ? 'c' : 'w');
+      fb.textContent = q.exp;
+      nextBtn.classList.add('show');
+    });
+    opts.appendChild(btn);
+  });
+  div.appendChild(opts);
+
+  var fb = document.createElement('div');
+  fb.className = 'mq-fb';
+  div.appendChild(fb);
+
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'mq-next';
+  nextBtn.textContent = qs_state.idx < qs.length - 1 ? 'Next question →' : 'See results 🎉';
+  nextBtn.addEventListener('click', function(){
+    qs_state.idx++;
+    qs_state.answered = false;
+    if (qs_state.idx >= qs.length) {
+      qs_state.done = true;
+      renderTab(currentTab);
+    } else {
+      renderTab(currentTab);
+    }
+  });
+  div.appendChild(nextBtn);
+  return div;
+}
+
+function buildQuizScore(qs_state, qs, modId) {
+  var pct = qs_state.score / qs.length;
+  var div = document.createElement('div');
+  div.className = 'mq-score show';
+  div.innerHTML =
+    '<div class="mqs-emoji">'+(pct===1?'🏆':pct>=.75?'🌟':pct>=.5?'👍':'📚')+'</div>'+
+    '<div class="mqs-num">'+qs_state.score+' / '+qs.length+'</div>'+
+    '<div class="mqs-msg">'+(pct===1?'Perfect! You\'re an AI expert!':pct>=.75?'Great job! You really know your AI!':pct>=.5?'Good effort — keep going!':'Keep learning — you\'ll get there!')+'</div>';
+  var restart = document.createElement('button');
+  restart.className = 'mq-restart';
+  restart.textContent = '🔄 Retry Quiz';
+  restart.addEventListener('click', function(){
+    S.qState[modId] = {idx:0, score:0, answered:false, done:false};
+    renderTab(currentTab);
+  });
+  div.appendChild(restart);
+  if (pct === 1) awardMedal('quiz_ace');
+  div.appendChild(buildCompleteSection(modId));
+  return div;
+}
+
+function buildCompleteSection(modId, compact) {
+  var mod = MODULES.filter(function(m){ return m.id===modId; })[0];
+  var done = S.completed.indexOf(modId) !== -1;
+  var wrap = document.createElement('div');
+  wrap.className = 'complete-section';
+  wrap.style.marginTop = compact ? '.8rem' : '1.5rem';
+  if (done) {
+    wrap.innerHTML = '<div class="cs-title">✅ Module Complete!</div><div class="cs-sub">You\'ve earned '+mod.xpReward+' XP for this module.</div>';
+  } else {
+    wrap.innerHTML = '<div class="cs-title">Ready to mark this complete?</div><div class="cs-sub">Click below to earn ⭐ '+mod.xpReward+' XP and record your progress.</div>';
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-p';
+    btn.textContent = '✅ Mark Complete & Earn ' + mod.xpReward + ' XP';
+    btn.addEventListener('click', function(){
+      completeMod(modId);
+      wrap.innerHTML = '<div class="cs-title">✅ Module Complete! +'+mod.xpReward+' XP earned 🎉</div>';
+    });
+    wrap.appendChild(btn);
+  }
+  return wrap;
+}
+
+function completeMod(modId) {
+  if (S.completed.indexOf(modId) !== -1) return;
+  S.completed.push(modId);
+  var mod = MODULES.filter(function(m){ return m.id===modId; })[0];
+  if (mod) addXP(mod.xpReward, mod.title + ' complete!');
+  if (S.completed.length === 1) awardMedal('first');
+  renderModulesGrid();
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════════
+//  GLOSSARY
+// ══════════════════════════════════════════════════
+var GLOSSARY = [
+  {term:'LLM — Large Language Model', def:'A type of AI trained on massive amounts of text. It learns patterns in language and can generate human-like text, answer questions, write stories, and more. Both ChatGPT and Claude are LLMs.'},
+  {term:'Transformer', def:'The core architecture most modern AI systems use. Invented by Google in 2017 ("Attention Is All You Need"). It processes all words in a sentence at once and figures out which words are most relevant to each other — called "attention."'},
+  {term:'Token', def:'The basic unit AIs process — not quite a word, more like a chunk of letters. "unhappy" becomes "un" + "happy" = 2 tokens. A token is roughly ¾ of an English word. Claude handles 200,000 tokens at once!'},
+  {term:'Context window', def:'How much text an AI can "see" at once in a single conversation. A bigger window means it can process longer documents. Claude\'s 200K context window fits about 150,000 words — roughly the length of an entire novel.'},
+  {term:'RLHF', def:'Reinforcement Learning from Human Feedback. Used to train ChatGPT. Human raters compare AI responses and rank which is best. The AI learns to produce responses that score well. Risk: can make the AI sycophantic (too agreeable).'},
+  {term:'Constitutional AI (CAI)', def:'Anthropic\'s training method for Claude. Instead of human raters, a written "Constitution" of principles guides the AI to critique and improve its own responses. More consistent and scalable than RLHF.'},
+  {term:'RLAIF', def:'Reinforcement Learning from AI Feedback. A variation used by Anthropic where an AI (instead of humans) gives the feedback that trains Claude. Like having 1,000 AI teaching assistants grade essays automatically.'},
+  {term:'Parameters', def:'The "knobs" inside an AI that get tuned during training. GPT-4 has an estimated 1 trillion parameters. More parameters generally = more capable model, but also much more expensive to run and train.'},
+  {term:'Sycophancy', def:'When an AI tells you what you want to hear instead of what\'s true. A common risk with RLHF-trained models, because human raters sometimes reward agreeable-sounding answers even when they\'re incorrect. Claude\'s constitution explicitly trains against this.'},
+  {term:'Hallucination', def:'When an AI confidently states something factually wrong. AIs predict words based on patterns, not facts — so they can produce plausible-sounding but completely incorrect statements. Always verify important facts!'},
+  {term:'PyTorch', def:'The machine learning framework OpenAI used to build ChatGPT. Created by Meta (Facebook). Very flexible and popular with researchers worldwide. Runs on NVIDIA GPU chips.'},
+  {term:'JAX', def:'The machine learning framework Anthropic used to build Claude. Created by Google. Designed to run very fast on Google\'s TPU chips. Harder to learn than PyTorch but extremely powerful for large-scale AI training.'},
+  {term:'TPU (Tensor Processing Unit)', def:'Special chips made by Google specifically for AI training and inference. Much faster than regular CPUs for the kind of maths AI models do. Claude runs on TPUs; ChatGPT runs on NVIDIA GPUs.'},
+  {term:'Fine-tuning', def:'After a model is pre-trained on massive data, fine-tuning adjusts it for specific tasks using a smaller, curated dataset. Like taking a student who\'s read every book ever written and then giving them a focused crash course in a specific skill.'}
+];
+
+function buildGlossary() {
+  var list = document.getElementById('glossList');
+  if (!list) return;
+  GLOSSARY.forEach(function(item, i){
+    var el = document.createElement('div');
+    el.className = 'gloss-item';
+    el.innerHTML =
+      '<div class="gloss-trigger"><span>'+item.term+'</span><span class="gloss-arrow">▾</span></div>'+
+      '<div class="gloss-body">'+item.def+'</div>';
+    el.addEventListener('click', function(){
+      el.classList.toggle('open');
+      if (el.classList.contains('open') && S.openedGloss.indexOf(i) === -1) {
+        S.openedGloss.push(i);
+        addXP(5, 'Learned: ' + item.term.split(' —')[0]);
+        if (S.openedGloss.length >= 5) awardMedal('gloss5');
+      }
+    });
+    list.appendChild(el);
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  LEADERBOARD
+// ══════════════════════════════════════════════════
+var FAKE_LB = [{name:'AstroLearner99',score:420},{name:'TechKid_Priya',score:310},{name:'CodeNinja7',score:255},{name:'CuriousMind22',score:190}];
+var LB_ICONS = ['🥇','🥈','🥉','4️⃣','5️⃣','6️⃣'];
+function renderLeaderboard() {
+  var el = document.getElementById('lbRows');
+  if (!el) return;
+  var all = FAKE_LB.concat([{name:'You 🎯', score:S.xp, isYou:true}]);
+  all.sort(function(a,b){ return b.score-a.score; });
+  el.innerHTML = all.map(function(l, i){
+    return '<div class="lb-row'+(l.isYou?' lb-you':'')+'">'+
+      '<div class="lb-rank">'+(LB_ICONS[i]||(i+1+'th'))+'</div>'+
+      '<div class="lb-name">'+l.name+'</div>'+
+      '<div class="lb-score">⭐ '+l.score+' XP</div>'+
+    '</div>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  TICKER
+// ══════════════════════════════════════════════════
+var FACTS = [
+  'ChatGPT and Claude are both free to try',
+  'Claude can read a whole novel in one go — 200,000 words!',
+  'ChatGPT was built using PyTorch — made by Meta',
+  'Claude was trained with a "Constitution" of values',
+  'GPT stands for Generative Pre-trained Transformer',
+  'Anthropic was founded in 2021 by ex-OpenAI researchers',
+  'Claude runs on Google TPUs, not NVIDIA GPUs',
+  'AI hallucination = when an AI confidently says something wrong',
+  'The Transformer architecture was invented by Google in 2017',
+  'Constitutional AI was designed to fight sycophancy in AI'
+];
+function buildTicker() {
+  var el = document.getElementById('tickerEl');
+  if (!el) return;
+  var facts = FACTS.concat(FACTS);
+  el.innerHTML = facts.map(function(f){ return '<span class="ticker-item">'+f+'</span>'; }).join('');
+}
+
+// ══════════════════════════════════════════════════
+//  INTERSECTION OBSERVER
+// ══════════════════════════════════════════════════
+function initObserver() {
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:0.08});
+  document.querySelectorAll('.fade-in').forEach(function(el){ obs.observe(el); });
+}
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function(){
+  buildTicker();
+  renderPreviewStrip();
+  renderModulesGrid();
+  buildGlossary();
+  renderMedals();
+  renderLeaderboard();
+  renderAchievements();
+  updateProgress();
+  initObserver();
+});
+</script>
+</body>
+</html>
